@@ -1,5 +1,7 @@
 package edu.kh.inheritance.model.service;
 
+import java.util.Scanner;
+
 import edu.kh.inheritance.model.vo.Employee;
 import edu.kh.inheritance.model.vo.Person;
 import edu.kh.inheritance.model.vo.Student;
@@ -38,6 +40,16 @@ public class InheritanceService {
 		std.setNationality("대한민국");
 		
 		
+		System.out.println(std.getGrade());
+		System.out.println(std.getClassRoom());
+		
+		// Student가 Person의 메소드 뿐만 아니라 필드도 상속 받았는지 확인
+		System.out.println(std.getName());
+		System.out.println(std.getAge());
+		System.out.println(std.getNationality());
+		
+		
+		
 		System.out.println("-----------------------------");
 		Employee emp = new Employee();
 		
@@ -49,6 +61,13 @@ public class InheritanceService {
 		emp.setAge(33);
 		emp.setNationality("대한민국");
 		
+		System.out.println(emp.getCompany());
+		
+		System.out.println(emp.getName());
+		System.out.println(emp.getAge());
+		System.out.println(emp.getNationality());
+		
+		
 		
 		System.out.println("-----------------------");
 		
@@ -56,8 +75,107 @@ public class InheritanceService {
 		p.breath();
 		std.breath();
 		emp.breath();
+	}
+	
+	
+	public void ex2() {
+		
+		// super() 생성자 사용 방법
+		
+		// Student 매개변수 5개 짜리 생성자
+		Student std = new Student("김철수", 17, "한국", 1, 3);
+		
+		System.out.println(std.getName()); // 김철수
+		System.out.println(std.getAge()); // 17
+		System.out.println(std.getNationality()); // 한국
+		System.out.println(std.getGrade()); // 1
+		System.out.println(std.getClassRoom()); // 3
 		
 	}
+	
+	
+	public void ex3() {
+		// 오버라이딩 확인 예제
+		
+		Student std = new Student();
+		Employee emp = new Employee();
+		
+		std.move(); // 오버라이딩 X -> Person의 메소드 수행
+		
+		emp.move(); // 오버라이딩 O -> Employee 메소드 수행
+	}
+	
+	
+	public void ex4() {
+		
+		// 모든 클래스는 Object 클래스의 후손
+		// == 모든 클래스의 최상의 부모는 Object
+		
+		// 1) Object 상속 여부 확인
+		Person p = new Person(); // Object를 상속 받은 Person 객체 생성
+		
+		Student std = new Student(); // Person을 상속 받은 Student 객체 생성
+		// Object - Person - Student
+		
+		Scanner sc = new Scanner(System.in);
+		String str = "abc";
+		
+		
+		// ** Object 상속과 단계적인 상속 확인
+		
+		System.out.println(p.hashCode()); // Object에서 물려 받은 hashCode()
+		
+		System.out.println(std.getAge()); // Person에서 물려 받은 getAge()
+		
+		System.out.println(std.hashCode());
+		// Person이 Object에서 물려 받은 hashCode()를
+		// Student가 또 물려 받아 사용
+		
+		// -> 상속의 상속의 상속의 .... 상속 가능
+		
+		
+		// * Object가 모든 클래스의 최상위 부모인지 확인
+		System.out.println( sc.hashCode()  );
+		// Object - hashCode()
+		
+		System.out.println( str.hashCode()  );
+		// String - hashCode()
+		// -> String이 Object에게 물려 받은 hashCode()를 오버라이딩함.
+		
+	}
+	
+	
+	public void ex5() {
+		
+		// toString() 오버라이딩과 super 참조변수
+		Person p = new Person("김개똥", 20, "한국");
+		
+		System.out.println( p.toString() ); // 김개똥 / 20 / 한국
+		System.out.println( p ); // 김개똥 / 20 / 한국
+		
+		// print 구문 수행 시 참조 변수명을 작성하면
+		// 자동으로 toString() 메소드를 호출해서 출력한다!
+		
+		System.out.println("------------------------------------");
+		
+		Student std = new Student("이백점", 18, "미국", 2, 6);
+		
+		System.out.println( std.toString() );
+		// 1) Student 클래스 toString() 오버라이딩 전
+		// Person으로 부터 상속 받은 오버라이딩된 toString() 수행
+	
+		// 2) Student 클래스 toString() 오버라이딩 후
+		// Student의 toString() 수행
+		
+		Employee emp = new Employee("김근로", 26 , "한국", "OO증권");
+		System.out.println( emp ); 
+		
+	}
+	
+	
+	
+	
+	
 }
 
 
