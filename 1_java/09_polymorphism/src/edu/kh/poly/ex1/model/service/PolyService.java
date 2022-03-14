@@ -209,7 +209,6 @@ public class PolyService {
 	}
 	
 	
-	
 	public void ex4() {
 		
 		// !!!!다운 캐스팅 주의 사항!!!!
@@ -232,6 +231,78 @@ public class PolyService {
 			System.out.println("실패(Spark 타입이 아님)");
 		}
 	}
+	
+	
+	public void ex5() {
+		
+		// 바인딩(Binding)
+		// - 실제 실행할 메소드 코드와 호출하는 코드를 연결 시키는 것
+		
+		Car c1 = new Car("경유 엔진", "경유", 8);
+		
+		System.out.println( c1.getEngine() );
+		// Car 객체에 있는 getEngine() 메소드를 호출 == 바인딩
+		
+		// String edu.kh.poly.ex1.model.vo.Car.getEngine()
+		
+		// 프로그램 "실행 전" 
+		// - 컴파일러는 getEngine() 메소드가 Car에 있는 걸로 인식해서
+		//   c1.getEngine() 호출 코드와
+		//   String edu.kh.poly.ex1.model.vo.Car.getEngine() 메소드 코드를 연결
+		// --> [정적 바인딩]
+		
+		
+		System.out.println( c1.toString() );
+		// String edu.kh.poly.ex1.model.vo.Car.toString()
+		// Car 참조변수 c1을 이용해서
+		// Car 객체에 있는 오버라이딩 된 toString() 메소드를 호출
+		
+		
+		// ** 다형성 적용 시 바인딩 **
+		Car c2 = new Spark("경차 엔진", "휘발유", 4, 0.5);
+		// 업캐스팅 적용 -> 부모 부분만 참조 가능한 상태
+		
+		System.out.println( c2.toString() );
+		// String edu.kh.poly.ex1.model.vo.Car.toString()
+		// 참조변수 c2가 Car 타입 이므로
+		// toString()도 Car의 toString()을 호출 - 정적 바인딩
+		
+		// 하지만 실행 해보면 자식(Spark)의 toString()이 호출되는 것을 확인 가능!
+		// -> 컴파일 시에는 부모(Car)와 바인딩 == [정적 바인딩]
+		// -> "실행 시" 에는 자식(Spark)의 오버라이딩된 메소드와 바인딩 == [동적 바인딩]
+		
+		
+		// ** 동적 바인딩 활용 방법** 
+		Car[] arr = {
+						new Car("경유 엔진", "경유", 12),
+						new Tesla("전기 모터", "전기", 4, 50000),
+						new Spark("경차 엔진", "무연", 4, 0.3)
+					};
+		
+		// arr 배열 요소가 참조하는 모든 객체의 필드 값을 출력
+		for(int i=0 ; i<arr.length ; i++) {
+			
+			System.out.println(i + "번째 요소 : " + arr[i].toString());
+			// 실행 전 : String edu.kh.poly.ex1.model.vo.Car.toString() - 정적 바인딩
+			// 실행 후 : 각 객체의 오버라이딩된 toString()이 호출됨 - 동적 바인딩
+			
+		}
+		
+		// ** 동적 바인딩 장점 **
+		// - 업캐스팅 상태의 참조 변수를 
+		//   별도의 다운 캐스팅 없이
+		//   자식의 오버라이딩된 메소드를 수행할 수 있다.
+		
+		
+		
+		
+		
+		
+	}
+	
+	
+	
+	
 	
 }
 
