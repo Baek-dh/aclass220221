@@ -1,5 +1,6 @@
 package edu.kh.exception.model.service;
 
+import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -177,11 +178,80 @@ public class ExceptionService {
 			System.out.println("무조건 수행됨");
 		}
 		
+	}
+	
+	
+	// ------------------------------------------------------------------------------------
+	
+	public void ex5() {
 		
+		// throws : 호출한 메서드에게 예외를 던짐
+		//			-> 호출한 메서드에게 예외를 처리하라고 위임하는 행위
+		
+		// throw  : 예외 강제 발생 구문(현재 메서드에 예외를 던짐)
+		
+		try {
+			methodA();
+			
+		}catch(Exception e) {
+			// Exception : 모든 예외의 최상위 부모
+			// -> Exception이 catch 매개변수로 작성되었다 == 예외 종류 상관없이 모두 처리
+			
+			System.out.println("예외 처리됨.");
+			
+			e.printStackTrace(); 
+			//발생한 예외가 메서드와 위치에 대한 모든 내용을 출력
+			// - 예외 발생 지점 추적
+		}
 		
 		
 	}
 	
+	public void methodA() throws IOException{
+		
+		methodB();
+	}
+	
+	public void methodB() throws IOException{
+		
+		methodC();
+	}
+	
+	public void methodC() throws IOException{
+		// methodC() 메서드는 IOException을 발생시킬 가능성이 있으므로
+		// 호출하는 곳에서 예외처리를 반드시 해야한다!!
+		// 단, UnCheckedException은 선택적으로 예외처리할 수 있음.
+		
+		// IOException 예외 강제 발생
+		throw new IOException();
+		
+		// 발생한 예외를 처리하는 방법
+		// 1) try - catch로 감싸서 현재 위치에서 처리
+		// 2) throws로 호출한 메서드로 예외를 위임하여 처리
+	}
+	
+	public void methodD() {
+		
+		throw new RuntimeException();
+		
+		// CheckedException :
+		// - RuntimeException과 자식 예외를 제외한 나머지 예외.
+		// - if문과 같은 단순 코드로 해결이 불가능하여
+		//   반드시 예외 처리 구문을 작성해야하는 예외.
+		
+		
+		
+		// UnCheckedException : 
+		// - RuntimeException과 자식 예외를 지칭함.
+		// - 프로그램 수행 중 
+		//   개발자의 코딩 실수 또는 사용자의 잘못된 값 입력으로 
+		//   흔하게 발생할 수 있는 예외
+		
+		//   --> 예외처리 구문이 아니라 if문 같은 단순 코드로 해결이 가능
+		
+		//   --> 예외 처리 구문을 반드시 작성할 필요가 없음.
+		
+	}
 	
 	
 	
