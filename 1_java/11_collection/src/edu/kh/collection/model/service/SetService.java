@@ -2,7 +2,9 @@ package edu.kh.collection.model.service;
 
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 import edu.kh.collection.model.vo.Member;
 
@@ -277,6 +279,31 @@ public class SetService {
 		// 왜? int는 기본 자료형이기 때문에 객체만 저장하는 컬렉션에는 들어갈 수 없다ㅠㅠ
 		
 		// -> 해결 방법 : Wrapper Class를 이용해서 기본 자료형을 객체로 포장한다.
+		
+		//Set<Integer> lotto = new HashSet<Integer>();
+
+		//Set<Integer> lotto = new LinkedHashSet<Integer>(); // 순서 유지 Set
+		
+		Set<Integer> lotto = new TreeSet<Integer>(); // 자동 정렬 Set
+		
+		
+		// Integer는 equals(), hashCode() 오버라이딩 완료 상태
+		
+		
+		
+		while(  lotto.size() < 6) {
+			// lotto에 저장된 값이 개수가 6개 미만이면 반복
+			
+			int random =  (int)(Math.random() * 45 + 1); // 1 ~ 45 사이 난수
+			
+			System.out.println(random);
+			
+			lotto.add(random);
+			//	int 값이 자동으로 Integer로 포장(AutoBoxing) 되어 lotto에 추가
+		}
+		
+		System.out.println("로또 번호 : " + lotto);
+		
 		
 		
 	}
