@@ -2,6 +2,7 @@ package edu.kh.collection.model.service;
 
 import java.util.ArrayList;
 import java.util.InputMismatchException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -26,7 +27,10 @@ public class StudentService {
 	//					-> 너무 큰 값을 작성하면 메모리를 많이 소모함.
 	
 	
-	private List<Student> studentList = new ArrayList<Student>();
+	//private List<Student> studentList = new ArrayList<Student>(); // 검색(조회)에 효율적
+	private List<Student> studentList = new LinkedList<Student>(); // 추가, 수정, 삭제에 효율적
+	
+	
 	// Student로 저장되는 타입이 제한된 리스트 생성
 	// == Student만 저장 가능 == 모든게 Student
 	// == Student임을 검사할 필요가 없다
@@ -406,15 +410,13 @@ public class StudentService {
 				System.out.println(std);
 				flag = false;
 			}
-		}
+		} 
 		
 		if(flag) { // flag가 true인 경우 == for문 내에 있는 if가 수행된적 없다
 				   // == 검색 결과 없다
 			System.out.println("검색 결과가 없습니다.");
 		}
 	}	
-	
-	
 	
 }
 
