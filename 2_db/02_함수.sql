@@ -341,3 +341,153 @@ SELECT EMP_NAME, DEPT_CODE,
     EXTRACT(YEAR FROM SYSDATE) -
     EXTRACT(YEAR FROM TO_DATE(SUBSTR(EMP_NO,1,6), 'RRMMDD')) "나이"
 FROM EMPLOYEE;
+
+--------------------------------------------------------------------------------
+
+/* 선택 함수 */
+-- 여러 가지 경우에 따라 알맞은 결과를 선택할 수 있음.
+
+-- DECODE(계산식 | 컬럼명, 조건값1, 선택값1, 조건값2, 선택값2....., 아무것도 일치하지 않을 때)
+-- 비교하고자 하는 값 또는 컬럼이 조건식과 같으면 결과 값 반환
+-- 일치하는 값을 확인(자바의 SWITCH와 비슷함)
+
+-- 직원들의 성별 구분하기
+SELECT EMP_NAME,  DECODE( SUBSTR(EMP_NO, 8, 1) , '1', '남자', '2', '여자' ) 성별
+FROM EMPLOYEE;
+
+-- 직원의 급여를 인상하고자 한다
+-- 직급코드가 J7인 직원은 급여의 10%를 인상하고
+-- 직급코드가 J6인 직원은 급여의 15%를 인상하고
+-- 직급코드가 J5인 직원은 급여의 20%를 인상하며
+-- 그 외 직급의 직원은 급여의 5%만 인상한다.
+-- 직원 테이블에서 직원명, 직급코드, 급여, 인상급여(위 조건)을 조회하세요
+
+SELECT EMP_NAME, JOB_CODE, SALARY,
+    DECODE(JOB_CODE, 'J7', SALARY * 1.1, 
+                     'J6', SALARY * 1.15,
+                     'J5', SALARY * 1.2,
+                     SALARY * 1.05) 인상급여
+FROM EMPLOYEE;
+
+
+-- CASE WHEN 조건식 THEN 결과값
+--      WHEN 조건식 THEN 결과값
+--      ELSE 결과값
+-- END
+
+-- 비교하고자 하는 값 또는 컬럼이 조건식과 같으면 결과 값 반환
+-- 조건은 범위 값 가능
+
+-- 성별 구분
+SELECT EMP_NAME,
+    CASE
+        WHEN SUBSTR(EMP_NO, 8, 1) = '1' THEN '남자'
+        WHEN SUBSTR(EMP_NO, 8, 1) = '2' THEN '여자'
+    END 성별
+FROM EMPLOYEE;
+
+
+-- EMPLOYEE 테이블에서 사번, 사원명, 급여를 조회
+-- 급여가 500만원 이상이면 '고급'
+-- 급여가 300~500만원이면 '중급'
+-- 그 미만은 '초급'으로 출력처리하고 별칭은 '구분'으로 한다.
+-- 부서코드가 'D6'인 직원만 조회
+-- 직급코드 오름차순 정렬
+
+SELECT EMP_ID, EMP_NAME, SALARY,
+    CASE
+        WHEN SALARY >= 5000000 THEN '고급'
+        --WHEN SALARY >= 3000000 AND SALARY < 5000000 THEN '중급'
+        WHEN SALARY >= 3000000  THEN '중급'
+        ELSE '초급'
+    END 구분
+FROM EMPLOYEE
+WHERE DEPT_CODE = 'D6'
+ORDER BY JOB_CODE ASC; -- 정렬 기준이 되는 컬럼은 반드시 SELECT절에 포함될 필요 없음.
+
+
+
+
+--------------------------------------------------------------------------------
+
+/* 그룹 함수 */
+-- 하나 이상의 행을 그룹으로 묶어 연산하여 총합, 평균 등의 하나의 결과 행으로 반환하는 함수
+
+
+-- SUM(숫자가 기록된 컬럼명) : 합계
+-- 모든 직원의 급여 합
+SELECT SUM(SALARY) FROM EMPLOYEE;
+
+-- 부서코드가 'D9'인 직원들의 급여 합
+SELECT SUM(SALARY) FROM EMPLOYEE
+WHERE DEPT_CODE = 'D9';
+
+
+-- AVG(숫자가 기록된 컬럼명)  : 평균
+-- 전 직원 급여 평균
+SELECT ROUND( AVG(SALARY) ) FROM EMPLOYEE;
+
+
+-- MIN(컬럼명) : 최소값
+-- MAX(컬럼명) : 최대값
+--> 타입 제한 없음 (숫자 : 대/소, 날짜 : 과거/미래, 문자열 : 문자 순서)
+
+-- EMPLOYEE 테이블에서 가장 낮은 급여
+-- 가장 빠른 입사일
+-- 알파벳 순서가 가장 빠른 이메일
+SELECT MIN(SALARY), MIN(HIRE_DATE), MIN(EMAIL)
+FROM EMPLOYEE; 
+-- 그룹 함수는 여러 개를 동시 작성 가능한데
+-- 이 때 결과는 실제 테이블 한 행이 아니고
+-- 각 그룹함수 별 독립된 결과
+
+
+
+-- EMPLOYEE 테이블에서 가장 높은 급여,
+-- 가장 늦은 입사일,
+-- 알파벳 순서가 가장 늦은 이메일
+/*3*/SELECT MAX(SALARY), MAX(HIRE_DATE), MAX(EMAIL)
+/*1*/FROM EMPLOYEE
+/*2*/WHERE EMP_ID != 200;
+
+
+-- * COUNT(* | 컬럼명) : 행 개수를 헤아려서 리턴
+-- COUNT([DISTINCT] 컬럼명) : 중복을 제거한 행 개수를 헤아려서 리턴
+-- COUNT(*) : NULL을 포함한 전체 행 개수를 리턴
+-- COUNT(컬럼명) : NULL을 제외한 실제 값이 기록된 행 개수를 리턴함
+
+
+-- EMPLOYEE 테이블 전체 행의 개수 == 전체 직원수
+SELECT COUNT(*) FROM EMPLOYEE;
+
+-- DEPT_CODE가 NULL이 아닌 행의 개수
+SELECT COUNT(*) FROM EMPLOYEE
+WHERE DEPT_CODE IS NOT NULL;
+
+-- COUNT(컬럼명) : NULL을 제외한 실제 값이 기록된 행 개수를 리턴함
+SELECT COUNT(DEPT_CODE) FROM EMPLOYEE;
+
+
+-- EMPLOYEE 테이블에 있는 부서 개수
+SELECT COUNT(DISTINCT DEPT_CODE) FROM EMPLOYEE;
+--> 7행의 결과가 있지만 1행이 NULL이기 때문에 COUNT 시 제외되어 6행으로 조회됨.
+
+
+-- EMPLOYEE 테이블의 남자 직원 수 조회
+SELECT COUNT(*) FROM EMPLOYEE
+WHERE SUBSTR(EMP_NO, 8, 1) = 1;
+
+
+SELECT COUNT(
+    CASE
+        WHEN SUBSTR(EMP_NO, 8, 1) = '1' THEN '남자'
+    END) 남자
+FROM EMPLOYEE;
+
+SELECT SUM(DECODE(SUBSTR(EMP_NO, 8, 1), '1' , 1)) FROM EMPLOYEE;
+
+
+
+
+
+
