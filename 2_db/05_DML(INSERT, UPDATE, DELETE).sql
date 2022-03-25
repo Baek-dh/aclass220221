@@ -240,8 +240,9 @@ VALUES (999, '곽두원', '561016-1234567', 'kwack_dw@kh.or.kr',
         '01011112222', 'D9', 'J4', 'S1', 9000000, 0.5, NULL,
         SYSDATE, NULL, DEFAULT);
        
-SELECT * FROM EMP_M01; 
-SELECT * FROM EMP_M02;
+       
+SELECT * FROM EMP_M01; -- 23행
+SELECT * FROM EMP_M02; -- 5행(4행 중복, 1행 중복x)
 
 UPDATE EMP_M02 SET SALARY = 0;
 
@@ -269,6 +270,8 @@ INSERT VALUES (EMP_M02.EMP_ID, EMP_M02.EMP_NAME, EMP_M02.EMP_NO,
                EMP_M02.JOB_CODE, EMP_M02.SAL_LEVEL, EMP_M02.SALARY,
                EMP_M02.BONUS, EMP_M02.MANAGER_ID, EMP_M02.HIRE_DATE,
                EMP_M02.ENT_DATE, EMP_M02.ENT_YN);
+               
+-- 5개 행 이(가) 병합되었습니다.
 
 SELECT * FROM EMP_M01; 
 
@@ -279,20 +282,36 @@ SELECT * FROM EMP_M01;
 -- 테이블의 행을 삭제하는 구문
 
 -- [작성법]
--- DELTE FROM 테이블명 WHERE 조건설정
+-- DELETE FROM 테이블명 WHERE 조건설정
 -- 만약 WHERE 조건을 설정하지 않으면 모든 행이 다 삭제됨
 
 COMMIT;
 
 -- EMPLOYEE2 테이블에서 '장채현'사원 정보 조회
+SELECT * FROM EMPLOYEE2
+WHERE EMP_NAME = '장채현';
 
 -- EMPLOYEE2 테이블에서 이름이 '장채현'인 사원 정보 삭제
+DELETE FROM EMPLOYEE2
+WHERE EMP_NAME = '장채현';
+--1 행 이(가) 삭제되었습니다.
 
 -- 삭제 확인
+SELECT * FROM EMPLOYEE2
+WHERE EMP_NAME = '장채현';
+
+SELECT * FROM EMPLOYEE2;
+
+ROLLBACK;
 
 -- EMPLOYEE2 테이블 전체 삭제
 
+DELETE FROM EMPLOYEE2;
+-- 24개 행 이(가) 삭제되었습니다.
 
+SELECT * FROM EMPLOYEE2;
+
+ROLLBACK;
 ---------------------------------------------------------------------------------------------
 
 
