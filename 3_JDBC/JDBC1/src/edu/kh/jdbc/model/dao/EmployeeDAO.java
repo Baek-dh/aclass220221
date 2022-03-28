@@ -3,6 +3,7 @@ package edu.kh.jdbc.model.dao;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -22,6 +23,11 @@ public class EmployeeDAO {
 	
 	private Statement stmt;
 	// Connection을 통해 SQL을 수행하고 결과를 반환 받는 객체
+	
+	private PreparedStatement pstmt;
+	// Statement의 자식으로 좀 더 향상된 기능을 제공
+	// - ?(위치홀더)를 이용하여 SQL에 작성되어지는 리터럴을 동적으로 제어함.
+	// --> 오타 위험 감소, 가독성 상승
 	
 	private ResultSet rs;
 	// SELECT 수행 후 반환되는 객체
@@ -213,6 +219,115 @@ public class EmployeeDAO {
 		// 조회 결과 있으면 Employee 객체 주소
 		// 없으면 null 반환
 		return emp;
+	}
+
+
+
+	/** 입력 받은 급여 이상으로 받는 모든 직원 조회 DAO
+	 * @param input
+	 * @return empList
+	 */
+	public List<Employee> selectSalary(int input) {
+		
+		List<Employee> empList = new ArrayList<Employee>();
+		
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			
+			// 커넥션 생성에 필요한 값 준비
+			String type = "jdbc:oracle:thin:@"; // 오라클 드라이버 타입
+			String ip = "115.90.212.22"; // 접속할 아이피
+			String port = ":20000"; // 개인컴퓨터는 1521 or 1522
+			String sid = ":xe"; // 접속할 DB 이름
+			String user = "bdh"; // 사용자 계정 명
+			String pw = "bdh1234"; // 사용자 계정 비밀번호
+			
+			// 커넥션 생성
+			conn = DriverManager.getConnection(type + ip + port + sid,  user  ,   pw);
+			
+			String sql = "SELECT * FROM EMPLOYEE2 WHERE SALARY >= " + input;
+			
+			stmt = conn.createStatement();
+			
+			rs = stmt.executeQuery(sql);
+			
+			while(rs.next()) {
+				int empId = rs.getInt("EMP_ID"); // 현재 행의 EMP_ID 컬럼 값을 int 자료형으로 얻어옴
+				String empName = rs.getString("EMP_NAME");
+				String empNo = rs.getString("EMP_NO");
+				String email = rs.getString("EMAIL");
+				String phone = rs.getString("PHONE");
+				String deptCode = rs.getString("DEPT_CODE");
+				String jobCode = rs.getString("JOB_CODE");
+				String salLevel = rs.getString("SAL_LEVEL");
+				int salary = rs.getInt("SALARY");
+				double bonus = rs.getDouble("BONUS"); // 실수형
+				int managerId = rs.getInt("MANAGER_ID");
+				Date hireDate = rs.getDate("HIRE_DATE");
+				Date entDate = rs.getDate("ENT_DATE");
+				char entYn = rs.getString("ENT_YN").charAt(0);
+				
+				Employee emp = new Employee(empId, empName, empNo, email, phone, 
+									deptCode, jobCode, salLevel, salary, 
+									bonus, managerId, hireDate, entDate, entYn);
+				
+				empList.add(emp);
+			}
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			
+			try {
+				if(rs != null) rs.close();
+				if(stmt != null) stmt.close();
+				if(conn != null) conn.close();
+				
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return empList;
+	}
+
+
+
+	/** 새로운 사원 정보 추가 DAO
+	 * @param emp
+	 * @return result
+	 */
+	public int insertEmployee(Employee emp) {
+		
+		int result = 0; // 결과 저장용 변수
+		
+		try {
+			// 오라클 JDBC 드라이버 메모리 로드
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			
+			// 커넥션 생성에 필요한 값 준비
+			String type = "jdbc:oracle:thin:@"; // 오라클 드라이버 타입
+			String ip = "115.90.212.22"; // 접속할 아이피
+			String port = ":20000"; // 개인컴퓨터는 1521 or 1522
+			String sid = ":xe"; // 접속할 DB 이름
+			String user = "bdh"; // 사용자 계정 명
+			String pw = "bdh1234"; // 사용자 계정 비밀번호
+			
+			// 커넥션 생성
+			conn = DriverManager.getConnection(type + ip + port + sid,  user  ,   pw);
+			
+			// SQL 작성
+			String sql = "INSERT INTO EMPLOYEE2 VALUES(?, ?, ?, ?, ?, ?, ?, 'S5', ?, ?, 200, SYSDATE, NULL, 'N')";
+						// ? 기호 == 위치 홀더
+			
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			
+		}
+		
+		return result;
 	}
 	
 	

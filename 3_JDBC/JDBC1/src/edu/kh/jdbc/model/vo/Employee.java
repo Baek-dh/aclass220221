@@ -41,6 +41,21 @@ public class Employee {
 		this.entYN = entYN;
 	}
 
+	
+	public Employee(int empId, String empName, String empNo, String email, String phone, String deptCode,
+			String jobCode, int salary, double bonus) {
+		super();
+		this.empId = empId;
+		this.empName = empName;
+		this.empNo = empNo;
+		this.email = email;
+		this.phone = phone;
+		this.deptCode = deptCode;
+		this.jobCode = jobCode;
+		this.salary = salary;
+		this.bonus = bonus;
+	}
+
 	public int getEmpId() {
 		return empId;
 	}

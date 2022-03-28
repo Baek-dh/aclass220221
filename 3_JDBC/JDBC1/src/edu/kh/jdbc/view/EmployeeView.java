@@ -43,7 +43,7 @@ public class EmployeeView {
 				// [실행화면]
 				
 				// 급여를 입력하세요 : 2000000
-				// (DB에서 조회된 사원 출력)
+				// (DB에서 조회된 사원 정보 모두 출력)
 				// 총 인원 : 22명
 				
 				System.out.println("0. 프로그램 종료");
@@ -56,9 +56,10 @@ public class EmployeeView {
 				switch(menuNum) {
 				case 1 : selectAll(); break;
 				case 2 : selectOne(); break;
-				case 3 :  break;
+				case 3 : insertEmployee(); break;
 				case 4 :  break;
 				case 5 :  break;
+				case 6 : selectSalary(); break;
 				case 0 : System.out.println("프로그램을 종료합니다..."); break;
 				default : System.out.println("잘못 입력하셨습니다. 다시 입력 해주세요.");
 				
@@ -114,8 +115,6 @@ public class EmployeeView {
 		
 	}
 	
-	
-	
 	/** 사번 입력용 View (2,4,5번 메뉴에 필요)
 	 * @return empNo
 	 */
@@ -126,8 +125,6 @@ public class EmployeeView {
 		
 		return empNo;
 	}
-	
-	
 	
 	/**
 	 * 사번으로 사원 정보 조회 View
@@ -150,12 +147,75 @@ public class EmployeeView {
 		
 		printList(empList);
 		
+	}
+	
+	
+	/**
+	 * 입력 받은 급여 이상으로 받는 모든 직원 조회
+	 */
+	public void selectSalary() {
 		
+		System.out.println("[입력 받은 급여 이상으로 받는 모든 직원 조회]");
 		
+		System.out.print("급여를 입력하세요 : ");
+		int input = sc.nextInt();
+		sc.nextLine();
+		
+		List<Employee> empList = service.selectSalary(input);
+		
+		printList(empList);
+		
+		System.out.println("총 인원 : " + empList.size() + "명");
 	}
 	
 	
 	
+	/**
+	 * 새로운 사원 정보 추가
+	 */
+	public void insertEmployee() {
+		System.out.println("[새로운 사원 정보 추가]");
+		
+		System.out.print("사번 : ");
+		int empId = sc.nextInt();
+		
+		System.out.print("이름 : ");
+		String empName = sc.next();
+		
+		System.out.print("주민등록번호 : ");
+		String empNo = sc.next();
+		
+		System.out.print("이메일 : ");
+		String email = sc.next();
+		
+		System.out.print("전화번호 : ");
+		String phone = sc.next();
+		
+		System.out.print("부서 코드(D1 ~ D9) : ");
+		String deptCode = sc.next();
+		
+		System.out.print("직급 코드(J1 ~ J7) : ");
+		String jobCode = sc.next();
+		
+		System.out.print("급여 : ");
+		int salary = sc.nextInt();
+		
+		System.out.print("보너스율 : ");
+		double bonus = sc.nextDouble();
+		sc.nextLine();
+		
+		// 입력 받은 값을 Employee 객체에 저장
+		Employee emp = new Employee(empId, empName, empNo, email, phone, 
+									deptCode, jobCode, salary, bonus);
+		
+		// 사원 정보 삽입 서비스 호출
+		int result = service.insertEmployee(emp);
+		
+		
+		
+		
+		
+	}
 	
 	
 	

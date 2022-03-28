@@ -37,6 +37,29 @@ public class EmployeeService {
 		return emp; // DAO 호출 결과를 바로 View로 반환
 	}
 
+
+	// 입력 받은 급여 이상으로 받는 모든 직원 조회 Service
+	public List<Employee> selectSalary(int input) {
+		
+		List<Employee> empList = dao.selectSalary(input);
+		
+		return empList;
+	}
+
+
+	/** 새로운 사원 정보 추가 Service
+	 * @param emp
+	 * @return
+	 */
+	public int insertEmployee(Employee emp) {
+		
+		int result = dao.insertEmployee(emp);
+		
+		return 0;
+	}
+
+	
+	
 	
 	
 }
