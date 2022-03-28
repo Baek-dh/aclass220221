@@ -55,7 +55,16 @@ public class EmployeeService {
 		
 		int result = dao.insertEmployee(emp);
 		
-		return 0;
+		return result; // INSERT 수행 결과 반환
+	}
+
+
+	// 사번으로 사원 정보 삭제 Service
+	public int deleteEmployee(int input) {
+		
+		int result = dao.deleteEmployee(input);
+		
+		return result;
 	}
 
 	

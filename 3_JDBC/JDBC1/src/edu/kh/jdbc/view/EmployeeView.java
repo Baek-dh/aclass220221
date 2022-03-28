@@ -58,7 +58,7 @@ public class EmployeeView {
 				case 2 : selectOne(); break;
 				case 3 : insertEmployee(); break;
 				case 4 :  break;
-				case 5 :  break;
+				case 5 : deleteEmployee(); break;
 				case 6 : selectSalary(); break;
 				case 0 : System.out.println("프로그램을 종료합니다..."); break;
 				default : System.out.println("잘못 입력하셨습니다. 다시 입력 해주세요.");
@@ -211,13 +211,41 @@ public class EmployeeView {
 		// 사원 정보 삽입 서비스 호출
 		int result = service.insertEmployee(emp);
 		
-		
-		
-		
+		if(result > 0) { // 삽입 성공
+			System.out.println("사원 정보가 추가되었습니다.");
+		}else {
+			System.out.println("사원 정보 추가 실패");
+		}
 		
 	}
 	
 	
+	
+	
+	/**
+	 * 사번으로 사원 정보 삭제 View
+	 */
+	public void deleteEmployee() {
+		// EMPLOYEE2 테이블에서
+		// 사번을 입력 받고 일치하는 사번을 가진 사원 정보 삭제(DELETE)
+		
+		// 조건 1 : PreparedStatement 사용
+		// 조건 2 : 삭제 성공 시 --> "삭제되었습니다."
+		//			삭제 실패 시 --> "일치하는 사번의 사원이 없습니다" 출력
+		
+		System.out.println("[사번으로 사원 정보 삭제]");
+		
+		int input = inputEmpId();
+		
+		// DELETE(DML) 수행 시 결과 행의 개수가 반환됨
+		int result = service.deleteEmployee(input);
+		
+		if(result > 0) {
+			System.out.println("삭제되었습니다.");
+		}else {
+			System.out.println("일치하는 사번의 사원이 없습니다");
+		}
+	}
 	
 	
 	

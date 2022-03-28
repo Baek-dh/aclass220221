@@ -320,11 +320,97 @@ public class EmployeeDAO {
 			String sql = "INSERT INTO EMPLOYEE2 VALUES(?, ?, ?, ?, ?, ?, ?, 'S5', ?, ?, 200, SYSDATE, NULL, 'N')";
 						// ? 기호 == 위치 홀더
 			
+			// Statement : 커넥션 생성 - SQL 작성 - Statement 객체 생성 - SQL 수행 후 결과 반환
+			
+			// PreparedStatement : 커넥션 생성 - SQL 작성(? 사용) - PreparedStatement 객체 생성(SQL 적재)
+			//						- 위치홀더에 알맞는 값 대입 - SQL 수행 후 결과 반환
+			
+			
+			// PreparedStatement 객체 생성(SQL 적재)
+			pstmt = conn.prepareStatement(sql);
+			
+			// 위치홀더에 알맞는 값 대입
+			// pstmt.set[Type](위치 홀더 순서, 값) 
+			
+			pstmt.setInt(1, emp.getEmpId()); // 입력 받은 사번을 1번 ?(위치홀더)에 세팅
+			pstmt.setString(2, emp.getEmpName());
+			pstmt.setString(3, emp.getEmpNo());
+			pstmt.setString(4, emp.getEmail());
+			pstmt.setString(5, emp.getPhone());
+			pstmt.setString(6, emp.getDeptCode());
+			pstmt.setString(7, emp.getJobCode());
+			pstmt.setInt(8, emp.getSalary());
+			pstmt.setDouble(9, emp.getBonus());
+			
+			// SQL 수행 후 결과 반환 받기
+			// 1) Statement - SELECT 		 : stmt.executeQuery(sql);
+			// 2) PreparedStatement - SELECT : pstmt.executeQuery(); <-- SQL 다시 담지 않음!!!!
+			
+			// **** DML 수행 시 executeUpdate 사용 ****
+			// 3) Statement - DML			 : stmt.executeUpdate(sql);
+			// 4) PreparedStatement - DML	 : pstmt.executeUpdate(); <-- SQL 다시 담지 않음!!!!
+			
+			result = pstmt.executeUpdate(); // INSERT, UPDATE, DELETE가 성공한 행의 개수를 반환!
+								   // 조건에 맞는 행이 없으면 0 반환
 			
 		}catch (Exception e) {
 			e.printStackTrace();
 		}finally {
 			
+			try {
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+				
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
+	}
+
+
+	// 사번으로 사원 정보 삭제 DAO
+	public int deleteEmployee(int input) {
+
+		int result = 0; // 결과 저장용 변수
+		
+		try {
+			// 오라클 JDBC 드라이버 메모리 로드
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			
+			// 커넥션 생성에 필요한 값 준비
+			String type = "jdbc:oracle:thin:@"; // 오라클 드라이버 타입
+			String ip = "115.90.212.22"; // 접속할 아이피
+			String port = ":20000"; // 개인컴퓨터는 1521 or 1522
+			String sid = ":xe"; // 접속할 DB 이름
+			String user = "bdh"; // 사용자 계정 명
+			String pw = "bdh1234"; // 사용자 계정 비밀번호
+			
+			// 커넥션 생성
+			conn = DriverManager.getConnection(type + ip + port + sid,  user  ,   pw);
+			
+			String sql = "DELETE FROM EMPLOYEE2 WHERE EMP_ID = ?";
+			
+			// PreparedStatement 생성(SQL 적재)
+			pstmt = conn.prepareStatement(sql);
+			
+			// 위치 홀더에 알맞은 값 대입
+			pstmt.setInt(1, input);
+			
+			result = pstmt.executeUpdate();
+			
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			
+			try {
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 		
 		return result;
