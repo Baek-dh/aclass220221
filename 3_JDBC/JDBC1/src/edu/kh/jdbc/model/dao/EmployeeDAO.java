@@ -315,6 +315,12 @@ public class EmployeeDAO {
 			
 			// 커넥션 생성
 			conn = DriverManager.getConnection(type + ip + port + sid,  user  ,   pw);
+			// --> 생성된 커넥션을 이용해 SQL을 수행하면 자동 커밋이 된다(기본값)
+			// ---> 자동 커밋 기능을 끄고 개발자가 트랜잭션을 직접 제어하는게 좋음
+			
+			conn.setAutoCommit(false); // 자동 커밋 기능 비활성화
+			// --> 자동 커밋을 비활성화 시켜도 
+			//     conn.close()가 실행되면 남은 트랜잭션 내용이 모두 commit된다
 			
 			// SQL 작성
 			String sql = "INSERT INTO EMPLOYEE2 VALUES(?, ?, ?, ?, ?, ?, ?, 'S5', ?, ?, 200, SYSDATE, NULL, 'N')";
@@ -353,6 +359,12 @@ public class EmployeeDAO {
 			result = pstmt.executeUpdate(); // INSERT, UPDATE, DELETE가 성공한 행의 개수를 반환!
 								   // 조건에 맞는 행이 없으면 0 반환
 			
+			
+			//***** 트랜잭션 제어 ******
+			if(result > 0)	conn.commit(); // DML 성공 시 commit 수행
+			else			conn.rollback(); // DML 실패 시 rollback 수행
+			
+			
 		}catch (Exception e) {
 			e.printStackTrace();
 		}finally {
@@ -389,6 +401,8 @@ public class EmployeeDAO {
 			
 			// 커넥션 생성
 			conn = DriverManager.getConnection(type + ip + port + sid,  user  ,   pw);
+			conn.setAutoCommit(false); // 자동 커밋 비활성화
+			// -> 활성화 상태일 경우 SQL이 수행 되자마자 commit이 되어버림
 			
 			String sql = "DELETE FROM EMPLOYEE2 WHERE EMP_ID = ?";
 			
@@ -399,6 +413,9 @@ public class EmployeeDAO {
 			pstmt.setInt(1, input);
 			
 			result = pstmt.executeUpdate();
+			
+			if(result > 0)	conn.commit();
+			else			conn.rollback();
 			
 			
 		}catch (Exception e) {
@@ -415,6 +432,130 @@ public class EmployeeDAO {
 		
 		return result;
 	}
+
+
+
+	/** 사번으로 사원 정보 수정 DAO (PreparedStatement)
+	 * @param emp
+	 * @return
+	 */
+	public int updateEmployee(Employee emp) {
+		
+		int result = 0; // 결과 저장용 변수
+		
+		try {
+			// oracle jdbc driver 메모리 로드
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			
+			// 커넥션 생성
+			conn = DriverManager.getConnection("jdbc:oracle:thin:@115.90.212.22:20000:xe", "bdh", "bdh1234");
+			
+			// 자동 커밋 비활성
+			conn.setAutoCommit(false);
+			
+			// sql 작성 (위치 홀더 포함)
+			String sql = "UPDATE EMPLOYEE2 SET EMAIL = ?, PHONE = ?, SALARY = ? WHERE EMP_ID = ?";
+			
+			// PreparedStatement 생성
+			pstmt = conn.prepareStatement(sql);
+			
+			// 위치 홀더에 알맞은 값 대입
+			
+			// setString()을 통해 위치홀더에 문자열 값을 대입하면
+			// 문자열 양쪽에 ''(홑따옴표)가 포함된 상태로 추가된다!
+			
+			// ex) pstmt.setString(1, "abc"); 
+			//		--> 위치홀더 자리  'abc'
+			
+			pstmt.setString(1, emp.getEmail()); 
+			pstmt.setString(2, emp.getPhone());
+			
+			
+			// setInt()는 '' 붙지 않음
+			pstmt.setInt(3, emp.getSalary());
+			pstmt.setInt(4, emp.getEmpId());
+			
+			
+			// SQL 수행
+			//pstmt.executeQuery() // SELECT 수행
+			result = pstmt.executeUpdate(); // DML(INSERT, UPDATE, DELETE) 수행
+			
+			// 트랜잭션 제어
+			if(result > 0)	conn.commit();
+			else			conn.rollback();
+			
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			
+			try {
+				if(pstmt != null) pstmt.close();
+				if(conn != null)  conn.close();
+				
+			}catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
+	}
+	
+
+	
+	/** 사번으로 사원 정보 수정2 DAO (Statement)
+	 * @param emp
+	 * @return result
+	 */
+	public int updateEmployee2(Employee emp) {
+		
+		int result = 0;
+		
+		try {
+			// oracle jdbc driver 메모리 로드
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			
+			// 커넥션 생성
+			conn = DriverManager.getConnection("jdbc:oracle:thin:@115.90.212.22:20000:xe", "bdh", "bdh1234");
+			
+			// 자동 커밋 비활성
+			conn.setAutoCommit(false);
+			
+			// SQL 작성(문자열 데이터 양쪽에 '' 붙이는거 잊지 않기!!!)
+			String sql = "UPDATE EMPLOYEE2 SET EMAIL = '" + emp.getEmail() + "', "
+					   + "PHONE = '" + emp.getPhone() + "', "
+					   + "SALARY = " + emp.getSalary()
+					   + " WHERE EMP_ID = " + emp.getEmpId();
+			
+			
+			// Statement 객체 생성
+			stmt = conn.createStatement();
+			
+			// SQL 수행
+			result = stmt.executeUpdate(sql);
+			
+			// 트랜잭션 제어
+			if(result > 0)	conn.commit();
+			else			conn.rollback();
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(stmt != null) stmt.close();
+				if(conn != null) conn.close();
+				
+			}catch(SQLException e){
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
+	}
+	
+	
+	
+	
 	
 	
 	

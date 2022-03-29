@@ -59,10 +59,27 @@ public class EmployeeService {
 	}
 
 
-	// 사번으로 사원 정보 삭제 Service
+	/** 사번으로 사원 정보 삭제 Service
+	 * @param input
+	 * @return
+	 */
 	public int deleteEmployee(int input) {
 		
 		int result = dao.deleteEmployee(input);
+		
+		return result;
+	}
+
+
+
+	/** 사번으로 사원 정보 수정 Service
+	 * @param emp
+	 * @return result
+	 */
+	public int updateEmployee(Employee emp) {
+		
+		//int result = dao.updateEmployee(emp);
+		int result = dao.updateEmployee2(emp);
 		
 		return result;
 	}

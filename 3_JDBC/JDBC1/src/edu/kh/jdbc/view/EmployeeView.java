@@ -33,10 +33,10 @@ public class EmployeeView {
 				System.out.println("1. 전체 사원 정보 조회");
 				System.out.println("2. 사번으로 사원 정보 조회");
 				System.out.println("3. 새로운 사원 정보 추가");
+				
 				System.out.println("4. 사번으로 사원 정보 수정");
+				
 				System.out.println("5. 사번으로 사원 정보 삭제");
-				
-				
 				System.out.println("6. 입력 받은 급여 이상으로 받는 모든 직원 조회");
 				// 메소드명 : selectSalary()
 				
@@ -57,7 +57,9 @@ public class EmployeeView {
 				case 1 : selectAll(); break;
 				case 2 : selectOne(); break;
 				case 3 : insertEmployee(); break;
-				case 4 :  break;
+				
+				case 4 : updateEmployee(); break;
+				
 				case 5 : deleteEmployee(); break;
 				case 6 : selectSalary(); break;
 				case 0 : System.out.println("프로그램을 종료합니다..."); break;
@@ -245,6 +247,50 @@ public class EmployeeView {
 		}else {
 			System.out.println("일치하는 사번의 사원이 없습니다");
 		}
+	}
+	
+	
+	
+	/**
+	 * 사번으로 사원 정보 수정
+	 */
+	public void updateEmployee() {
+		
+		System.out.println("[사번으로 사원 정보 수정]");
+		
+		int empId = inputEmpId(); // 사번 입력 받는 메서드 호출 후 결과를 반환 받기
+		
+		// 이메일, 전화번호, 급여 입력 받기
+		System.out.print("변경된 이메일 입력 : ");
+		String email = sc.next();
+		
+		System.out.print("변경된 전화번호 입력(- 제외) : ");
+		String phone = sc.next();
+		
+		System.out.print("변경된 급여 : ");
+		int salary = sc.nextInt();
+		sc.nextLine(); // 입력 버퍼에 남은 개행문자 제거
+		
+		
+		// 입력된 내용을 Employee 객체를 생성해서 저장
+		Employee emp = new Employee();
+		
+		// setter를 이용해서 세팅
+		emp.setEmpId(empId);
+		emp.setEmail(email);
+		emp.setPhone(phone);
+		emp.setSalary(salary);
+		
+		
+		// 수정 == UPDATE == DML == 성공한 행의 개수가 반환 == int 자료형
+		int result = service.updateEmployee(emp);
+		
+		if(result > 0) {
+			System.out.println("사원 정보가 수정되었습니다.");
+		}else {
+			System.out.println("일치하는 사번의 사원이 없습니다.");
+		}
+		
 	}
 	
 	
