@@ -197,6 +197,7 @@ public class EmployeeDAO {
 				emp = new Employee(empId, empName, empNo, email, phone, 
 									deptCode, jobCode, salLevel, salary, 
 									bonus, managerId, hireDate, entDate, entYn);
+				
 			}
 			
 		}catch (Exception e) {
@@ -522,11 +523,16 @@ public class EmployeeDAO {
 			conn.setAutoCommit(false);
 			
 			// SQL 작성(문자열 데이터 양쪽에 '' 붙이는거 잊지 않기!!!)
-			String sql = "UPDATE EMPLOYEE2 SET EMAIL = '" + emp.getEmail() + "', "
+			/*String sql = "UPDATE EMPLOYEE2 SET EMAIL = '" + emp.getEmail() + "', "
 					   + "PHONE = '" + emp.getPhone() + "', "
 					   + "SALARY = " + emp.getSalary()
+					   + " WHERE EMP_ID = " + emp.getEmpId();*/
+
+			String sql = "UPDATE EMPLOYEE2 SET "
+					   + "EMAIL = '" + emp.getEmail()  + "', "
+					   + "SALARY = " + emp.getSalary() + ", "
+					   + "PHONE = '" + emp.getPhone()  + "' "
 					   + " WHERE EMP_ID = " + emp.getEmpId();
-			
 			
 			// Statement 객체 생성
 			stmt = conn.createStatement();
@@ -549,6 +555,104 @@ public class EmployeeDAO {
 				e.printStackTrace();
 			}
 		}
+		
+		return result;
+	}
+
+
+
+	/** 부서의 보너스를 모두 수정 DAO
+	 * @param emp
+	 * @return result
+	 */ 
+	public int updateBonus(Employee emp) {
+		
+		int result = 0;
+		
+		try {
+			// oracle jdbc driver 메모리 로드
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			
+			// 커넥션 생성
+			conn = DriverManager.getConnection("jdbc:oracle:thin:@115.90.212.22:20000:xe", "bdh", "bdh1234");
+			
+			// 자동 커밋 비활성
+			conn.setAutoCommit(false);
+			
+			String sql = "UPDATE EMPLOYEE2 SET "
+					   + "BONUS = " + emp.getBonus() 
+					   + " WHERE DEPT_CODE = '" + emp.getDeptCode() + "'";
+			
+			
+			stmt = conn.createStatement();
+			
+			result = stmt.executeUpdate(sql);
+			
+			if(result > 0)	conn.commit();
+			else 			conn.rollback();
+			
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			
+			try {
+				if(stmt != null) stmt.close();
+				if(conn != null) conn.close();
+			}catch(SQLException e) {
+				e.printStackTrace();
+			}
+			
+		}
+		
+		
+		return result;
+	}
+	
+	/** 부서의 보너스를 모두 수정 DAO2
+	 * @param emp
+	 * @return result
+	 */ 
+	public int updateBonus2(Employee emp) {
+		
+		int result = 0;
+		
+		try {
+			// oracle jdbc driver 메모리 로드
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			
+			// 커넥션 생성
+			conn = DriverManager.getConnection("jdbc:oracle:thin:@115.90.212.22:20000:xe", "bdh", "bdh1234");
+			
+			// 자동 커밋 비활성
+			conn.setAutoCommit(false);
+			
+			String sql = "UPDATE EMPLOYEE2 SET BONUS = ? WHERE DEPT_CODE = ?"; 
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setDouble(1, emp.getBonus());
+			pstmt.setString(2, emp.getDeptCode());
+			
+			result = pstmt.executeUpdate();
+			
+			if(result > 0)	conn.commit();
+			else 			conn.rollback();
+			
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			
+			try {
+				if(stmt != null) stmt.close();
+				if(conn != null) conn.close();
+			}catch(SQLException e) {
+				e.printStackTrace();
+			}
+			
+		}
+		
 		
 		return result;
 	}

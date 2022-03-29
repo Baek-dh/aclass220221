@@ -33,18 +33,30 @@ public class EmployeeView {
 				System.out.println("1. 전체 사원 정보 조회");
 				System.out.println("2. 사번으로 사원 정보 조회");
 				System.out.println("3. 새로운 사원 정보 추가");
-				
 				System.out.println("4. 사번으로 사원 정보 수정");
-				
 				System.out.println("5. 사번으로 사원 정보 삭제");
 				System.out.println("6. 입력 받은 급여 이상으로 받는 모든 직원 조회");
 				// 메소드명 : selectSalary()
-				
 				// [실행화면]
-				
 				// 급여를 입력하세요 : 2000000
 				// (DB에서 조회된 사원 정보 모두 출력)
 				// 총 인원 : 22명
+				
+				
+				System.out.println("7. 부서코드, 보너스율을 입력 받아 해당 부서의 보너스를 모두 수정");
+				
+				// 메소드명 : updateBonus()
+				// [실행화면]
+				// 부서 코드를 입력하세요 : D1
+				// 보너스율을 입력하세요 : 0.3
+				
+				// (성공 시) : D1 부서의 보너스율이 0.3으로 변경되었습니다.
+				// (실패 시) : 일치하는 부서코드가 존재하지 않습니다.
+				// 출력
+				
+				// DAO 작성 시 Statement 사용
+				//   + PreparedStatement 코드도 작성해보기
+				
 				
 				System.out.println("0. 프로그램 종료");
 				System.out.println("====================================");
@@ -62,6 +74,7 @@ public class EmployeeView {
 				
 				case 5 : deleteEmployee(); break;
 				case 6 : selectSalary(); break;
+				case 7 : updateBonus(); break;
 				case 0 : System.out.println("프로그램을 종료합니다..."); break;
 				default : System.out.println("잘못 입력하셨습니다. 다시 입력 해주세요.");
 				
@@ -293,6 +306,45 @@ public class EmployeeView {
 		
 	}
 	
+	
+	
+	/**
+	 * 부서코드, 보너스율을 입력 받아 해당 부서의 보너스를 모두 수정
+	 */
+	public void updateBonus() {
+		// 부서 코드를 입력하세요 : D1
+		// 보너스율을 입력하세요 : 0.3
+		
+		// (성공 시) : D1 부서의 보너스율이 0.3으로 변경되었습니다.
+		// (실패 시) : 일치하는 부서코드가 존재하지 않습니다.
+		// 출력
+		
+		// DAO 작성 시 Statement 사용
+		//   + PreparedStatement 코드도 작성해보기
+		System.out.println("[부서의 보너스를 모두 수정]");
+		
+		System.out.print("부서 코드를 입력하세요 : ");
+		String deptCode = sc.next();
+		
+		System.out.print("보너스율을 입력하세요 : ");
+		double bonus = sc.nextDouble();
+		sc.nextLine();
+		
+		Employee emp = new Employee();
+		emp.setDeptCode(deptCode);
+		emp.setBonus(bonus);
+		
+		int result = service.updateBonus(emp);
+		
+		if(result > 0) {
+			System.out.printf("%s 부서의 보너스율이 %.1f으로 변경되었습니다.\n", deptCode, bonus);
+		
+		}else {
+			System.out.println("일치하는 부서코드가 존재하지 않습니다.");
+		}
+		
+		
+	}
 	
 	
 	

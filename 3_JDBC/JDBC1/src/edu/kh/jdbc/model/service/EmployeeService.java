@@ -84,6 +84,20 @@ public class EmployeeService {
 		return result;
 	}
 
+
+
+	/** 부서의 보너스를 모두 수정 Service
+	 * @param emp
+	 * @return result
+	 */
+	public int updateBonus(Employee emp) {
+		
+		//int result = dao.updateBonus(emp);
+		int result = dao.updateBonus2(emp);
+		
+		return result;
+	}
+
 	
 	
 	
