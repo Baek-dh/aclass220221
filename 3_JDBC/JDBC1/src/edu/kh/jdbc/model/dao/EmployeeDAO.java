@@ -49,8 +49,6 @@ public class EmployeeDAO {
 			// 2) DB 연결 작업(Connection 얻어오기)
 			String type = "jdbc:oracle:thin:@"; // 오라클 드라이버 타입
 			
-//			String ip = "127.0.0.1"; // 루프백 아이피(자기 컴퓨터)
-//			String ip = "localhost"; // 루프백 아이피와 같음(자기 컴퓨터)
 			String ip = "115.90.212.22"; // 접속할 아이피
 			String port = ":20000"; // 개인컴퓨터는 1521 or 1522
 			String sid = ":xe"; // 접속할 DB 이름
@@ -126,14 +124,12 @@ public class EmployeeDAO {
 			try {
 				if(rs != null) 	 rs.close();
 				if(stmt != null) stmt.close();
-				if(conn != null) conn.close();
+				if(conn != null) conn.close(); //  SQLException
 				
 			}catch (SQLException e) {
 				e.printStackTrace();
 			}
-			
 		}
-		
 		
 		// 8) List 호출부로 반환
 		return empList;
