@@ -627,3 +627,64 @@ SELECT DENSE_RANK() OVER(ORDER BY SALARY DESC) AS 순위 ,EMP_NAME, SALARY
 FROM EMPLOYEE;
 
 
+--------------------------------------------------------------------------------
+
+-- 6. 부서별 입사일이 가장 빠른 사원의
+-- 사번, 이름, 부서명(NULL이면 '소속없음'), 직급명, 입사일을 조회하고
+-- 입사일이 빠른 순으로 조회하시오
+-- 단, 퇴사한 직원은 제외하고 조회..
+
+SELECT EMP_ID, EMP_NAME, NVL(DEPT_TITLE, '소속없음'),JOB_NAME, HIRE_DATE
+FROM EMPLOYEE
+LEFT JOIN DEPARTMENT ON(DEPT_CODE = DEPT_ID)
+JOIN JOB USING(JOB_CODE)
+WHERE HIRE_DATE IN (SELECT MIN(HIRE_DATE) 
+                        FROM EMPLOYEE
+                        WHERE ENT_YN != 'Y'
+                        GROUP BY DEPT_CODE);
+
+-- 상관 쿼리 사용
+SELECT EMP_ID, EMP_NAME, NVL(DEPT_TITLE, '소속없음'),JOB_NAME, HIRE_DATE, DEPT_CODE
+FROM EMPLOYEE E1
+LEFT JOIN DEPARTMENT ON(DEPT_CODE = DEPT_ID)
+JOIN JOB USING(JOB_CODE)
+WHERE HIRE_DATE = (SELECT MIN(HIRE_DATE) 
+                   FROM EMPLOYEE E2 
+                   WHERE ENT_YN != 'Y'
+                   AND E1.DEPT_CODE = E2.DEPT_CODE
+                   OR (E1.DEPT_CODE IS NULL AND E2.DEPT_CODE IS NULL)  );
+
+
+-------------------------
+
+-- 7. 직급별 나이가 가장 어린 직원의
+-- 사번, 이름, 직급명, 나이, 보너스 포함 연봉을 조회하고
+-- 나이순으로 내림차순 정렬하세요
+-- 단 연봉은 \124,800,000 으로 출력되게 하세요. (\ : 원 단위 기호
+
+SELECT EMP_ID, EMP_NAME, JOB_NAME,
+    FLOOR (MONTHS_BETWEEN(SYSDATE, TO_DATE( SUBSTR(EMP_NO, 1, 6), 'RRMMDD') ) / 12) "만 나이",
+    TO_CHAR(  SALARY * (1 + NVL(BONUS, 0))  * 12 , 'L999,999,999') "보너스 포함 연봉"
+FROM EMPLOYEE E1 
+JOIN JOB J ON( E1.JOB_CODE = J.JOB_CODE )
+WHERE 
+    FLOOR (MONTHS_BETWEEN(SYSDATE, TO_DATE( SUBSTR(EMP_NO, 1, 6), 'RRMMDD') ) / 12) -- 나이
+    = (SELECT MIN( FLOOR (MONTHS_BETWEEN(SYSDATE, TO_DATE( SUBSTR(EMP_NO, 1, 6), 'RRMMDD') ) / 12) )
+        FROM EMPLOYEE E2
+        WHERE E1.JOB_CODE = E2.JOB_CODE)
+ORDER BY "만 나이" DESC;
+-- 선동일, 노옹철, 정중하
+
+
+
+
+SELECT FLOOR (MONTHS_BETWEEN(SYSDATE, TO_DATE( SUBSTR(EMP_NO, 1, 6), 'RRMMDD') ) / 12) "만 나이"
+FROM EMPLOYEE;
+
+SELECT EXTRACT(YEAR FROM SYSDATE) - EXTRACT(YEAR FROM  TO_DATE( SUBSTR(EMP_NO, 1, 6), 'RRMMDD') ) 나이
+FROM EMPLOYEE;
+
+
+
+
+
