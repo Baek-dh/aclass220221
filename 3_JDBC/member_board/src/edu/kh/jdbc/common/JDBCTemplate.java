@@ -52,7 +52,6 @@ public class JDBCTemplate {
 				// driver.xml파일 읽어오기
 				prop.loadFromXML(new FileInputStream("driver.xml"));
 				
-				
 				// 커넥션 생성 준비
 				String driver = prop.getProperty("driver"); 
 				// oracle.jdbc.drvier.OracleDriver

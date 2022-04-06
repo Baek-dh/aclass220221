@@ -35,10 +35,10 @@ public class CreateXML { // 혼자서 실행하면 파일 사라집니다.. 조�
 		Properties prop = new Properties();
 		
 		try {
-			FileOutputStream fos = new FileOutputStream("driver.xml");
+			FileOutputStream fos = new FileOutputStream("member-sql.xml");
 													// 파일 이름
 			
-			prop.storeToXML(fos, "DB Connection data"); // xml파일 생성
+			prop.storeToXML(fos, "Member Service SQL"); // xml파일 생성
 			
 		} catch (IOException e) {
 			e.printStackTrace();
