@@ -8,6 +8,8 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import edu.kh.jdbc.common.JDBCTemplate;
@@ -190,6 +192,129 @@ public class MemberDAO {
 		
 		// 8) DAO 수행 결과 반환
 		return loginMember;
+	}
+
+
+	/** 가입된 회원 목록 조회 DAO
+	 * @param conn
+	 * @return memberList
+	 * @throws Exception
+	 */
+	public List<Member> selectAll(Connection conn) throws Exception{
+
+		// 결과 저장용 변수
+		List<Member> memberList = new ArrayList<Member>();
+		
+		try {
+			// 1) SQL 작성
+			String sql = prop.getProperty("selectAll");
+			
+			// 2) Statement 객체 생성
+			stmt = conn.createStatement();
+			
+			// 3) SQL(SELECT) 수행 후 결과(ResultSet) 반환 받기
+			rs = stmt.executeQuery(sql);
+			
+			// 4) ResultSet을 한 행씩 접근(rs.next())하여 조회된 컬럼 값을 얻어와
+			//    Member 객체에 저장 (while문 사용하여 반복)
+			while(rs.next()) {
+				String memberId = rs.getString("MEMBER_ID");
+				String memberName = rs.getString("MEMBER_NM");
+				Date enrollDate = rs.getDate("ENROLL_DATE");
+				
+				Member member = new Member();
+				member.setMemberId(memberId);
+				member.setMemberName(memberName);
+				member.setEnrollDate(enrollDate);
+				
+				// 5) 컬럼 값이 저장된 Member 객체를 List에 추가
+				memberList.add(member);
+			}
+			
+		
+		} finally {
+			// 6) 사용한 JDBC 자원 반환(Connection 제외)
+			close(rs);
+			close(stmt);
+			
+		}
+		
+		// 7) 결과 반환
+		return memberList;
+	}
+
+
+
+	/** 내 정보 수정 DAO
+	 * @param conn
+	 * @param updateMember
+	 * @return result
+	 * @throws Exception
+	 */
+	public int updateMyInfo(Connection conn, Member updateMember) throws Exception{
+	
+		int result = 0; // 결과 저장용 변수 선언
+		
+		try {
+			// 1) SQL 작성
+			String sql = prop.getProperty("updateMyInfo");
+			
+			// 2) PreparedStatement 객체 생성
+			pstmt = conn.prepareStatement(sql);
+			
+			// 3) 위치 홀더에 알맞은 값 대입
+			pstmt.setString(1, updateMember.getMemberName());
+			pstmt.setString(2, updateMember.getMemberGender() + "");
+			pstmt.setInt(3, updateMember.getMemberNo());
+			
+			// 4) SQL(UPDATE) 수행 후 결과(성공한 행의 개수) 반환
+			result = pstmt.executeUpdate();
+			
+		}finally {
+			// 5) 사용한 JDBC 자원 반환
+			close(pstmt);
+		}
+
+		// 6) 결과 반환
+		return result;
+	}
+
+
+
+	/** 비밀번호 변경 DAO
+	 * @param conn
+	 * @param memberNo
+	 * @param currentPw
+	 * @param newPw
+	 * @return result
+	 * @throws Exception
+	 */
+	public int updatePw(Connection conn, int memberNo, String currentPw, String newPw) throws Exception {
+	
+		int result = 0; // 결과 저장할 변수 선언
+		
+		try {
+			// 1) SQL 작성
+			String sql = prop.getProperty("updatePw");
+			
+			// 2) PreparedStatement 생성
+			pstmt = conn.prepareStatement(sql);
+			
+			// 3) 위치 홀더에 알맞은 값 대입
+			pstmt.setString(1, newPw);
+			pstmt.setInt(2, memberNo);
+			pstmt.setString(3, currentPw);
+			
+			// 4) SQL(UPDATE) 수행 후 결과(성공한 행의 개수) 반환
+			result = pstmt.executeUpdate();
+			
+		}finally {
+			// 5) 사용한 JDBC 객체 자원 반환
+			close(pstmt);
+		}
+		
+		//6) 결과 반환
+		return result;
 	}
 	
 	

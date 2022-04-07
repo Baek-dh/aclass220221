@@ -9,6 +9,7 @@ import static edu.kh.jdbc.common.JDBCTemplate.getConnection;
 import static edu.kh.jdbc.common.JDBCTemplate.rollback;
 
 import java.sql.Connection;
+import java.util.List;
 
 import edu.kh.jdbc.member.model.dao.MemberDAO;
 import edu.kh.jdbc.member.model.vo.Member;
@@ -101,6 +102,84 @@ public class MemberService {
 		return loginMember;
 	}
 
+
+
+	/** 가입된 회원 목록 조회 Service
+	 * @return memberList
+	 * @throws Exception
+	 */
+	public List<Member> selectAll() throws Exception {
+		
+		// 1) Connection 생성
+		Connection conn = getConnection();
+		
+		// 2) DAO 메서드(SELECT 수행) 호출 후 결과 반환 받기
+		List<Member> memberList = dao.selectAll(conn);
+		
+		// 3) Connection 반환
+		close(conn);
+		
+		// 4) DAO 호출 결과 View로 반환
+		return memberList;
+	}
+
+
+
+	/** 내 정보 수정 Service
+	 * @param updateMember
+	 * @return result
+	 * @throws Exception
+	 */
+	public int updateMyInfo(Member updateMember) throws Exception {
+		// 1) Connection 생성
+		Connection conn = getConnection();
+		
+		// 2) DAO 수행(UPDATE) 후 결과 반환 받기
+		int result = dao.updateMyInfo(conn, updateMember);
+		
+		// 3) 트랜잭션 제어 처리
+		if(result > 0)	commit(conn);
+		else			rollback(conn);
+		
+		// 4) Connection 반환
+		close(conn);
+		
+		// 5) DAO 수행 결과를 View로 반환
+		return result;
+	}
+
+
+
+	/** 비밀번호 변경 Service
+	 * @param memberNo
+	 * @param currentPw
+	 * @param newPw
+	 * @return result
+	 * @throws Exception
+	 */
+	public int updatePw(int memberNo, String currentPw, String newPw) throws Exception{
+		
+		// 1) Connection 생성
+		Connection conn = getConnection();
+		
+		// 2) DAO 메서드(UPDATE) 호출 후 결과 반환
+		int result = dao.updatePw(conn, memberNo, currentPw, newPw);
+		
+		// 3) 트랜잭션 제어 처리
+		if(result > 0)	commit(conn);
+		else			rollback(conn);
+		
+		// 4) Connection 반환
+		close(conn);
+		
+		// 5) DAO 수행 결과 View로 반환
+		return result;
+	}
+
+	
+	public int secession(int memberNo, String memberPw) {
+		return 0;
+	}
 	
 	
 	

@@ -1,5 +1,6 @@
 package edu.kh.jdbc.member.view;
 
+import java.util.List;
 import java.util.Scanner;
 
 import edu.kh.jdbc.member.model.service.MemberService;
@@ -43,6 +44,7 @@ public class MemberView { // 회원 관련 화면 입/출력
 				}
 			} // 중복 검사 while 종료
 			
+			System.out.println(memberId);
 			
 			// 비밀번호, 비밀번호 확인을 각각 입력 받아
 			// 일치할 때 까지 무한 반복
@@ -143,6 +145,225 @@ public class MemberView { // 회원 관련 화면 입/출력
 		
 		return loginMember;
 	}
+
+
+	/**
+	 * 내 정보 조회
+	 * @param loginMember
+	 */
+	public void myInfo(Member loginMember) {
+		System.out.println("[내 정보 조회]");
+		
+		System.out.println("회원 번호 : " 	+ loginMember.getMemberNo());
+		System.out.println("아이디 : " 		+ loginMember.getMemberId());
+		System.out.println("이름 : " 		+ loginMember.getMemberName());
+		
+		if(loginMember.getMemberGender() == 'M') {
+			System.out.println("성별 : 남성");
+		}else {
+			System.out.println("성별 : 여성");
+		}
+		
+		
+		System.out.println("가입일 : " 		+ loginMember.getEnrollDate());
+	}
+
+
+	/**
+	 * 가입된 회원 목록 조회
+	 */
+	public void selectAll() {
+		
+		System.out.println("[가입된 회원 목록 조회]");
+		
+		// DB에서 회원 정보 모두 조회(아이디, 이름, 가입일)
+		// 단, 탈퇴 회원 제외, 아이디 오름 차순 조회
+		
+		try {
+		
+			// 회원 정보 조회 Service 호출 후 결과 반환 받기
+			List<Member> memberList = service.selectAll();
+			
+			
+			if( memberList.isEmpty() ) { // 비어있음 == 조회 결과 없음
+				System.out.println("조회 결과가 없습니다.");
+				
+			}else {
+				
+				// 향상된 for문
+				for( Member mem : memberList ) {
+					System.out.printf("%12s   %12s   %s\n", 
+						mem.getMemberId(),  mem.getMemberName(),  
+						mem.getEnrollDate().toString());
+					
+				}
+				
+			}
+		
+			
+		} catch(Exception e) {
+			System.out.println("\n<회원 목록 조회 과정에서 예외 발생>\n");
+			e.printStackTrace();
+		}
+		
+	}
+
+
+	/** 내 정보 수정
+	 * @param loginMember
+	 */
+	public void updateMyInfo(Member loginMember){
+		
+		System.out.println("[내 정보 수정(이름, 성별)]");
+		
+		System.out.print("변경할 이름 : ");
+		String memberName = sc.next();
+		
+		System.out.print("변경할 성별(M/F) : ");
+		char memberGender = sc.next().toUpperCase().charAt(0);
+		
+		
+		// 입력 받은 값 + 로그인한 회원 번호를 하나의 Member 객체에 저장
+		// (로그인한 회원 번호 == 어떤 회원 정보를 수정할지 지정)
+		Member updateMember = new Member();
+		
+		updateMember.setMemberName(memberName);
+		updateMember.setMemberGender(memberGender);
+		updateMember.setMemberNo( loginMember.getMemberNo() );
+		
+		
+		try {
+			// UPDATE == DML == 수행 성공한 결과 행의 개수를 반환 == 정수형
+			int result = service.updateMyInfo(updateMember);
+			
+			if(result > 0) { // 수정 성공
+				System.out.println("\n[회원 정보가 수정되었습니다.]\n");
+				
+				// DB의 수정된 내용과 현재 로그인한 회원 정보를 일치 시킴
+				// 얕은 복사 : 참조 주소만 복사하여 같은 객체를 참조
+				//  -> 특징 : 복사된 주소를 참조하여 수정하면 원본 객체가 수정된다.
+				loginMember.setMemberName(memberName);
+				loginMember.setMemberGender(memberGender);
+				
+			} else { // 수정 실패
+				System.out.println("\n[회원 정보 수정에 실패 하였습니다.]\n");
+			}
+			
+		}catch (Exception e) {
+			System.out.println("\n<내 정보 수정 중 예외 발생>\n");
+			e.printStackTrace();
+		}
+		
+	}
+
+
+	/** 비밀번호 변경
+	 * @param loginMember
+	 */
+	public void updatePw(Member loginMember) {
+		
+		System.out.println("[비밀번호 변경]");
+		
+		// 현재 비밀번호  --> DB Update 조건(WHERE)
+		System.out.print("현재 비밀번호 : ");
+		String currentPw = sc.next();
+		
+		// 새 비밀번호
+		// 새 비밀번호 확인
+		// -> 둘이 일치할 때 까지 무한 반복
+		String newPw = null;
+		String newPw2 = null;
+		
+		while(true) {
+			System.out.print("새 비밀번호 : ");
+			newPw = sc.next();
+			
+			System.out.print("새 비밀번호 확인 : ");
+			newPw2 = sc.next();
+			
+			if(newPw.equals(newPw2)) {
+				break;
+			}else {
+				System.out.println("\n새 비밀번호가 일치하지 않습니다. 다시 입력해주세요.\n");
+			}
+		}
+		
+		try {
+			int result = service.updatePw(loginMember.getMemberNo(), currentPw, newPw);
+			
+			
+			// 성공 : "[비밀번호가 변경되었습니다.]"
+			// 실패 : "[현재 비밀번호가 일치하지 않습니다.]"
+			if(result > 0) {
+				System.out.println("[비밀번호가 변경되었습니다.]");
+				
+			}else {
+				System.out.println("[현재 비밀번호가 일치하지 않습니다.]");
+			}
+			
+		}catch (Exception e) {
+			System.out.println("\n<비밀번호 변경 중 예외 발생>\n");
+			e.printStackTrace();
+		}
+		
+	}
+
+
+	/** 회원 탈퇴 
+	 * @param loginMember
+	 * @return result (DAO 수행 결과)
+	 */
+	public int secession(Member loginMember) {
+		// loginMember = null; 
+		// -> 매개변수로 전달받은 값을 주소 복사본을 저장할 뿐이다
+		//   -> 복사본이 사라진다고 해도 원본(MainView의 loginMember)은
+		//      사라지지 않는다. -> 로그아웃이 안된다
+		
+		System.out.println("[회원 탈퇴]");
+		
+//		1. 현재 비밀번호 입력 받기
+		System.out.print("비밀번호 입력 : ");
+		String memberPw = sc.next();
+		
+//		2. "정말 탈퇴하시겠습니까?(Y/N)"
+		System.out.print("정말 탈퇴하시겠습니까?(Y/N) : ");
+		char ch = sc.next().toUpperCase().charAt(0);
+		
+//		3. (Y 입력 시) 탈퇴 Service 수행  
+		if(ch == 'Y') {
+			try {
+							// 로그인한 회원 번호 + 입력 받은 비밀번호
+				int result = service.secession(loginMember.getMemberNo(), memberPw);
+				
+				//	4. 탈퇴 Service 수행 성공 -> "탈퇴 되었습니다." -> 로그아웃
+				//	탈퇴 Service 수행 실패 -> "비밀번호가 일치하지 않습니다."
+			
+				if(result > 0) {
+					System.out.println("탈퇴 되었습니다.");
+					
+				}else {
+					System.out.println("비밀번호가 일치하지 않습니다.");
+				}
+				
+				return result; // 현재 메서드를 종료하고 호출한 곳으로 돌아감
+				
+			}catch (Exception e) {
+				System.out.println("\n<회원 탈퇴 과정에서 예외 발생>\n");
+				e.printStackTrace();
+				
+			}
+			
+		} else {
+//		   (N 입력 시) "회원 탈퇴 취소"
+			System.out.println("\n[회원 탈퇴 취소]\n");
+			
+		}
+			
+		
+		return 0;
+	}
+	
+	
 	
 	
 	

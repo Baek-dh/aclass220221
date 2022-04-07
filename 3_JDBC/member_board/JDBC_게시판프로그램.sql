@@ -98,6 +98,31 @@ ALTER TABLE MEMBER
 RENAME COLUMN 이전컬럼명 TO 변경할 컬럼명;
 
 
+-------------------------------------
+
+-- DB에서 회원 정보 모두 조회(아이디, 이름, 가입일)
+-- 단, 탈퇴 회원 제외, 아이디 오름 차순 조회
+SELECT MEMBER_ID, MEMBER_NM, ENROLL_DATE
+FROM MEMBER
+WHERE SECESSION_FL = 'N' -- 탈퇴 안한 사람만 조회
+ORDER BY MEMBER_ID;
+
+-- 비밀번호 변경
+UPDATE MEMBER SET
+MEMBER_PW = ?       -- 새 비밀번호
+WHERE MEMBER_NO = ? -- 로그인한 회원 번호
+AND MEMBER_PW = ?   -- 현재 비밀번호
+
+-- 회원 탈퇴
+UPDATE MEMBER SET
+SECESSION_FL = 'Y'
+WHERE MEMBER_NO = ? -- 로그인한 회원 번호
+AND MEMBER_PW = ? -- 입력 받은 비밀번호
+
+
+
+
+
 
 
 

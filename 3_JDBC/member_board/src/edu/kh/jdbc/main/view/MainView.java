@@ -55,19 +55,52 @@ public class MainView { // 메인 메뉴(메뉴 선택용/입력 화면)
 				
 					
 				} else { // 로그인이 되어있는 경우
+
+					// - 게시글 삽입
+					// - 게시판 목록 조회
+					// - 게시글 상세조회(댓글X)
+					//	 -> 게시글 상세조회(+ 댓글 조회, 삽입, 수정, 삭제)
+					// - 게시글 수정
+					// - 게시글 삭제
 					
-					System.out.println(loginMember); // 로그인 확인
 					
 					System.out.println("\n********** 회원 메뉴 **********\n");
+					// - 로그인한 회원 정보 조회
+					// - 회원 목록 조회
+					// - 회원 정보 수정(이름, 성별)
+					// - 비밀번호 변경
+					// - 회원 탈퇴
+					System.out.println("1. 내 정보 조회");
+					System.out.println("2. 가입된 회원 목록 조회");
+					System.out.println("3. 내 정보 수정(이름, 성별)");
+					System.out.println("4. 비밀번호 변경");
+					System.out.println("5. 회원 탈퇴");
 					
 					System.out.println("9. 로그아웃");
 					
 					System.out.print("메뉴를 선택해주세요 >> ");
 					menuNum = sc.nextInt();
 					sc.nextLine();
+					System.out.println();
 					
 					switch(menuNum) {
+					case 1: memberView.myInfo(loginMember);  break;
+					case 2: memberView.selectAll();   break;
+					case 3: memberView.updateMyInfo(loginMember); break;
+					case 4: memberView.updatePw(loginMember);   break;
+					case 5: 
+						
+						int result = memberView.secession(loginMember);
+						
+						if(result > 0) loginMember = null; // 로그아웃
+						
+						//loginMember = memberView.secession(loginMember);
+							
+						break;
+						
+						
 					case 9: loginMember = null; break;
+					
 					default: System.out.println("메뉴에 작성된 번호를 입력해주세요.");
 					}
 					
