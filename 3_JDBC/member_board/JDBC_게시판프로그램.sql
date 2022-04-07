@@ -118,7 +118,7 @@ UPDATE MEMBER SET
 SECESSION_FL = 'Y'
 WHERE MEMBER_NO = ? -- 로그인한 회원 번호
 AND MEMBER_PW = ? -- 입력 받은 비밀번호
-
+;
 
 
 

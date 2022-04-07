@@ -93,20 +93,14 @@ public class MainView { // 메인 메뉴(메뉴 선택용/입력 화면)
 						int result = memberView.secession(loginMember);
 						
 						if(result > 0) loginMember = null; // 로그아웃
-						
-						//loginMember = memberView.secession(loginMember);
 							
 						break;
-						
 						
 					case 9: loginMember = null; break;
 					
 					default: System.out.println("메뉴에 작성된 번호를 입력해주세요.");
 					}
-					
-					
 				}
-				
 				
 				
 			}catch(InputMismatchException e) {
