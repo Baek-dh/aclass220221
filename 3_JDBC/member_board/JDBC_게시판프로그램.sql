@@ -169,6 +169,25 @@ VALUES(SEQ_REPLY_NO.NEXTVAL, '샘플1의 댓글3', DEFAULT, 1, 1);
 COMMIT;
 
 
+-- 특정 게시글 상세 조회
+SELECT B.* , MEMBER_NM
+FROM BOARD B
+JOIN MEMBER M ON (B.MEMBER_NO = M.MEMBER_NO)
+WHERE BOARD_NO = 1;
+
+-- 특정 게시글의 댓글 목록 조회
+SELECT R.*, MEMBER_NM
+FROM REPLY R
+JOIN MEMBER M ON(R.MEMBER_NO = M.MEMBER_NO)
+WHERE BOARD_NO = 1
+--ORDER BY REPLY_NO DESC; -- 최근 댓글이 상단
+ORDER BY REPLY_NO; -- 최근 댓글이 하단
+
+-- 댓글 목록에서 최근에 작성한 글은     제일 위?         제일 아래?
+--                                      SNS, 기사       카페, 커뮤니티
+
+
+
 
 
 

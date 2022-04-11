@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 import edu.kh.jdbc.board.model.service.BoardService;
 import edu.kh.jdbc.board.model.vo.Board;
+import edu.kh.jdbc.board.model.vo.Reply;
 import edu.kh.jdbc.member.model.vo.Member;
 
 // 게시판 메뉴 전용 화면
@@ -29,8 +30,12 @@ public class BoardView {
 				
 				System.out.println("1. 게시글 목록 조회");
 				System.out.println("2. 게시글 상세 조회(게시글 번호 입력)");
+							// 게시글 상세조회 + 댓글 목록 조회
+				
 							// 게시글 작성자와 로그인한 회원이 같을 때
 							// 게시글 수정(UPDATE), 게시글 삭제(DELETE)
+				
+							// 댓글 삽입, 수정, 삭제
 				
 				System.out.println("3. 게시글 작성(INSERT)");
 				System.out.println("4. 게시글 검색(제목/내용/제목+내용/작성자)");
@@ -45,7 +50,12 @@ public class BoardView {
 				
 				switch(menuNum) {
 				case 1: selectAll();  break;
-				case 2:   break;
+				case 2: selectOne(loginMember); break;
+					// 상세 조회 시 게시글 수정/삭제(게시글 작성 == 로그인한 회원 비교)
+					// 댓글(누가 작성? / 작성자가 수정,삭제 확인)
+					// -> loginMember를 매개변수로 전달
+				
+				
 				case 3:   break;
 				case 4:   break;
 				case 0: System.out.println("회원 메뉴로 돌아갑니다 ..."); break;
@@ -92,9 +102,6 @@ public class BoardView {
 				}
 			}
 			
-			
-			
-			
 		}catch (Exception e) {
 			System.out.println("\n<게시글 목록 조회 중 예외 발생>\n");
 			e.printStackTrace();
@@ -105,8 +112,71 @@ public class BoardView {
 	
 	
 	
-	
-	
+	/** 게시글 상세조회
+	 * @param loginMember
+	 */
+	private void selectOne(Member loginMember) {
+		System.out.println("[게시글 상세 조회]");
+		
+		System.out.print("조회할 게시글 번호 입력 : ");
+		
+		int boardNo = sc.nextInt();
+		sc.nextLine();
+		
+		// 게시글 상세조회 Service를 호출 후 결과 반환(게시글 1개의 정보 == Board)
+		try {
+			Board board = service.selectOne(boardNo);
+			
+			// ------------------------------------------------------------
+			// 번호 : 1     |  제목 : 샘플 게시글 1
+			// ------------------------------------------------------------
+			// 작성자 : 유저일입니다.  
+			// 작성일 : 2022-04-11     
+			// 조회수 : 0
+			// ------------------------------------------------------------
+			//
+			// (내용)
+			//
+			// ------------------------------------------------------------
+			//
+			// [댓글]
+			// <3> | 유저일입니다 | 2022-04-11
+			// (내용)
+			// .............................................................
+			//
+			// <2> | 유저일입니다 | 2022-04-11
+			// (내용)
+			// .............................................................
+			
+			System.out.println("\n------------------------------------------------------------");
+			System.out.printf("번호 : %d     |  제목 : %s\n", board.getBoardNo(), board.getBoardTitle());
+			System.out.println("------------------------------------------------------------");
+			System.out.printf("작성자 : %s\n"
+							+ "작성일 : %s\n"
+							+ "조회수 : %d\n", 
+							board.getMemberName(), board.getCreateDate(), board.getReadCount());
+			System.out.println("------------------------------------------------------------");
+			System.out.printf("\n%s\n\n", board.getBoardContent());
+			System.out.println("------------------------------------------------------------");
+			
+			System.out.println("\n[댓글]");
+			
+			// 댓글 목록 조회
+			for( Reply r : board.getReplyList() ) {
+				System.out.printf("<%d> | %s | %s\n", 
+						r.getReplyNo(), r.getMemberName(), r.getCreateDate());
+				
+				System.out.println(r.getReplyContent());
+				System.out.println(".............................................................\n");
+			}
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+
 	
 	
 }
