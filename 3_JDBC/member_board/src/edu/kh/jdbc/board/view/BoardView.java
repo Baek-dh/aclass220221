@@ -74,6 +74,24 @@ public class BoardView {
 			// 게시글 목록 조회 Service 호출 후 결과 반환 받기
 			List<Board> boardList = service.selectAll();
 			
+			if(boardList.isEmpty()) { // 조회 결과가 없는 경우
+				System.out.println("\n[조회된 게시글이 없습니다.]\n");
+				
+			}else {
+				System.out.println("------------------------------------------------------------------------");
+				System.out.printf("%3s  %13s%12s   %7s%3s %7s%2s %s\n",
+							"글번호", "제목", "", "작성자", "", "작성일", "" , "조회수");
+				System.out.println("------------------------------------------------------------------------");
+				
+				// 향상된 for문
+				for(Board b : boardList) {
+					
+					System.out.printf("%3d  %20s [%d]  %10s  %s %3d\n",
+							b.getBoardNo(), b.getBoardTitle(), b.getReplyCount(),
+							b.getMemberName(), b.getCreateDate().toString(), b.getReadCount());
+				}
+			}
+			
 			
 			
 			
