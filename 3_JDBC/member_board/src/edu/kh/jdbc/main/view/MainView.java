@@ -3,6 +3,7 @@ package edu.kh.jdbc.main.view;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import edu.kh.jdbc.board.view.BoardView;
 import edu.kh.jdbc.member.model.vo.Member;
 import edu.kh.jdbc.member.view.MemberView;
 
@@ -15,6 +16,9 @@ public class MainView { // 메인 메뉴(메뉴 선택용/입력 화면)
 	
 	// 회원 관련 기능 화면을 모아둔 객체를 참조할 변수
 	private MemberView memberView = new MemberView();
+	
+	// 게시판 관련 기능 화면을 모아둔 객체를 참조할 변수
+	private BoardView boardView = new BoardView();
 	
 	
 	// alt + shift + j : 메소드/클래스 설명용 주석 생성
@@ -76,6 +80,8 @@ public class MainView { // 메인 메뉴(메뉴 선택용/입력 화면)
 					System.out.println("4. 비밀번호 변경");
 					System.out.println("5. 회원 탈퇴");
 					
+					System.out.println("6. * 게시판 메뉴 화면 *");
+					
 					System.out.println("9. 로그아웃");
 					
 					System.out.print("메뉴를 선택해주세요 >> ");
@@ -91,10 +97,11 @@ public class MainView { // 메인 메뉴(메뉴 선택용/입력 화면)
 					case 5: 
 						
 						int result = memberView.secession(loginMember);
-						
 						if(result > 0) loginMember = null; // 로그아웃
-							
 						break;
+						
+					case 6 : boardView.boardMenu(loginMember); break;
+						
 						
 					case 9: loginMember = null; break;
 					
@@ -107,9 +114,6 @@ public class MainView { // 메인 메뉴(메뉴 선택용/입력 화면)
 				System.out.println("\n입력 형식이 올바르지 않습니다. 다시 시도 해주세요.");
 				sc.nextLine(); // 입력 버퍼에 남은 잘못된 문자열 제거
 			}
-			
-			
-			
 			
 			
 			
