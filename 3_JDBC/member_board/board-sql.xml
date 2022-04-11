@@ -32,7 +32,13 @@
 	</entry>
 	
 	
-
+	<!-- 게시글 조회수 증가 -->
+	<entry key="increaseReadCount">
+		UPDATE BOARD SET
+		READ_COUNT = READ_COUNT + 1   
+		WHERE BOARD_NO = ?
+	</entry>
+	
 
 
 

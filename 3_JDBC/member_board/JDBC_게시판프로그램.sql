@@ -131,7 +131,7 @@ SELECT BOARD_NO, BOARD_TITLE, CREATE_DATE, READ_COUNT, MEMBER_NM,
      WHERE R.BOARD_NO = B.BOARD_NO) REPLY_COUNT
 FROM BOARD B
 JOIN MEMBER USING(MEMBER_NO)
-ORDER BY BOARD_NO DESC    ;
+ORDER BY BOARD_NO DESC ;
 
 
 -- 댓글 개수 조회(특정 게시글만)
@@ -184,7 +184,14 @@ WHERE BOARD_NO = 1
 ORDER BY REPLY_NO; -- 최근 댓글이 하단
 
 -- 댓글 목록에서 최근에 작성한 글은     제일 위?         제일 아래?
---                                      SNS, 기사       카페, 커뮤니티
+--                                      SNS, 기사      카페, 커뮤니티
+
+
+-- 게시글 수 증가
+-- 이전 조회수 + 1 을 조회수 컬럼에 대입
+UPDATE BOARD SET
+READ_COUNT = READ_COUNT + 1   
+WHERE BOARD_NO = ?
 
 
 

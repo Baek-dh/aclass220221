@@ -127,27 +127,7 @@ public class BoardView {
 		try {
 			Board board = service.selectOne(boardNo);
 			
-			// ------------------------------------------------------------
-			// 번호 : 1     |  제목 : 샘플 게시글 1
-			// ------------------------------------------------------------
-			// 작성자 : 유저일입니다.  
-			// 작성일 : 2022-04-11     
-			// 조회수 : 0
-			// ------------------------------------------------------------
-			//
-			// (내용)
-			//
-			// ------------------------------------------------------------
-			//
-			// [댓글]
-			// <3> | 유저일입니다 | 2022-04-11
-			// (내용)
-			// .............................................................
-			//
-			// <2> | 유저일입니다 | 2022-04-11
-			// (내용)
-			// .............................................................
-			
+			// 상세 조회 출력
 			System.out.println("\n------------------------------------------------------------");
 			System.out.printf("번호 : %d     |  제목 : %s\n", board.getBoardNo(), board.getBoardTitle());
 			System.out.println("------------------------------------------------------------");
@@ -159,15 +139,68 @@ public class BoardView {
 			System.out.printf("\n%s\n\n", board.getBoardContent());
 			System.out.println("------------------------------------------------------------");
 			
-			System.out.println("\n[댓글]");
-			
 			// 댓글 목록 조회
+			System.out.println("\n[댓글]");
 			for( Reply r : board.getReplyList() ) {
 				System.out.printf("<%d> | %s | %s\n", 
 						r.getReplyNo(), r.getMemberName(), r.getCreateDate());
 				
 				System.out.println(r.getReplyContent());
 				System.out.println(".............................................................\n");
+			}
+			
+			
+			// -------------------------------------------
+			// 상세 조회용 메뉴 출력
+			
+			System.out.println("===== 상세 조회 메뉴 =====");
+			
+			System.out.println("1. 댓글 삽입"); // 어떤 회원이든 가능
+			
+			// 댓글 번호 입력받아 
+			// 댓글을 작성한 회원 번호 == 로그인한 회원 번호
+			// -> 수정/삭제
+			System.out.println("2. 댓글 수정"); 
+			System.out.println("3. 댓글 삭제");
+			
+			// 상세 조회된 게시글의 회원 번호 == 로그인한 회원 번호
+			// -> 게시글 수정/삭제
+			if(board.getMemberNo() == loginMember.getMemberNo() ) {
+				System.out.println("4. 게시글 수정");
+				System.out.println("5. 게시글 삭제");
+			}
+			
+			System.out.print("메뉴 선택 >> ");
+			int menuNum = sc.nextInt();
+			sc.nextLine();
+			
+			switch(menuNum) {
+			case 1:  break;
+			case 2:  break;
+			case 3:  break;
+			
+			case 4:  case 5:  
+				
+				// 게시글 작성자 번호 == 로그인 회원 번호
+				if(board.getMemberNo() == loginMember.getMemberNo() ) {
+					
+					// 4번
+					if(menuNum == 4) {
+						
+						
+					} else { // 5번
+						// 게시글 삭제
+						
+					}
+					
+					
+				} else {
+					System.out.println("메뉴에 표시된 번호만 입력 해주세요.");
+				}
+				
+			break;
+			
+			default:  System.out.println("메뉴에 표시된 번호만 입력 해주세요.");
 			}
 			
 			
