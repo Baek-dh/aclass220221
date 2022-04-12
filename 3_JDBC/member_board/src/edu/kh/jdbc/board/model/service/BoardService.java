@@ -44,6 +44,7 @@ public class BoardService {
 		// 1) Connection 생성
 		Connection conn = getConnection();
 		
+		
 		// 2) 특정 게시글 상세 조회 DAO 메서드(SELECT) 호출 후 결과 반환 받기
 		Board board = dao.selectOne(conn, boardNo);
 		
