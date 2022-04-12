@@ -264,9 +264,18 @@ public class BoardView {
 			if(input.equals(cap)) { // 입력받은 문자열과 보안 문자가 같을 때
 				// 삭제 Service 호출
 				
+				int result = service.deleteBoard(boardNo);
+				
+				if(result > 0) {
+					System.out.println(boardNo + "번 게시글이 삭제되었습니다.");
+				}else {
+					System.out.println("삭제 실패");
+				}
+				
+				
 			} else {
 				// 취소
-				
+				System.out.println("\n보안 문자가 일치하지 않습니다.(삭제 취소)\n");
 			}
 			
 			

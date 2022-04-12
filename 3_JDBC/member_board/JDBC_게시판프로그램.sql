@@ -191,9 +191,35 @@ ORDER BY REPLY_NO; -- 최근 댓글이 하단
 -- 이전 조회수 + 1 을 조회수 컬럼에 대입
 UPDATE BOARD SET
 READ_COUNT = READ_COUNT + 1   
-WHERE BOARD_NO = ?
+WHERE BOARD_NO = 1;
+
+rollback;
 
 
+-- 게시글 삭제
+COMMIT;
+
+DELETE FROM BOARD WHERE BOARD_NO = 1;
+ROLLBACK;
+-- ORA-02292: 무결성 제약조건(BDH_MEMBER.SYS_C009776)이 위배되었습니다- 자식 레코드가 발견되었습니다
+
+SELECT * FROM BOARD WHERE BOARD_NO = 1; -- BOARD 테이블 1번 게시글
+SELECT * FROM REPLY WHERE BOARD_NO = 1; -- REPLY 테이블에서 BOARD 테이블 1번 게시글을 참조하는 댓글
+--> 기본적으로 삭제 불가 
+--> 삭제 옵션을 추가하면 가능
+-- ON DELETE SET NULL(자식 컬럼 NULL)   /  ON DELETE CASCADE(참조하던 자식 행도 삭제)
+
+-- 제약조건은 ALTER(변경) 없음 -> 삭제 후 다시 추가
+
+-- 기존 REPLY 테이블 FK 제약조건 삭제
+ALTER TABLE REPLY DROP CONSTRAINT SYS_C009776;
+
+-- 삭제 옵션이 추가된 FK를 다시 추가
+ALTER TABLE REPLY 
+ADD FOREIGN KEY(BOARD_NO) 
+REFERENCES BOARD 
+ON DELETE CASCADE;
+-- Table REPLY이(가) 변경되었습니다.
 
 
 
