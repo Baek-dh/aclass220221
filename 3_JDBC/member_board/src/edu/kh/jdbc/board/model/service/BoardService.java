@@ -86,6 +86,53 @@ public class BoardService {
 
 	
 	
+	/** 게시글 삭제 Service
+	 * @param boardNo
+	 * @return result
+	 * @throws Exception
+	 */
+	public int deleteBoard(int boardNo) throws Exception {
+		// 1) Connection 생성
+		Connection conn = getConnection();
+				
+		// 2) DAO 메서드(DELETE) 호출 후 결과(성공한 행의 개수) 반환 받기
+		int result = dao.deleteBoard(conn, boardNo);
+		
+		// 3) 트랜 잭션 처리
+		if(result > 0) commit(conn);
+		else rollback(conn);
+		
+		// 4) Connection 반환
+		close(conn);
+		
+		// 5) 결과 반환
+		return result;
+	}
+
+
+	/** 게시글 수정 Service
+	 * @param board
+	 * @return result
+	 * @throws Exception
+	 */
+	public int updateBoard(Board board) throws Exception {
+
+		Connection conn = getConnection();
+		
+		int result = dao.updateBoard(conn, board);
+		
+		if(result > 0)	commit(conn);
+		else			rollback(conn);
+		
+		close(conn);
+		
+		return result;
+	}
+	
+	
+	
+	
+	
 	
 	
 	

@@ -173,6 +173,8 @@ public class BoardView {
 					System.out.println("5. 게시글 삭제");
 				}
 				
+				System.out.println("0. 게시판 메뉴로 돌아가기");
+				
 				System.out.print("메뉴 선택 >> ");
 				int menuNum = sc.nextInt();
 				sc.nextLine();
@@ -182,6 +184,8 @@ public class BoardView {
 				case 2:  break;
 				case 3:  break;
 				
+				case 0 : System.out.println("\n게시판 메뉴로 돌아갑니다...\n"); break;
+				
 				case 4:  case 5:  
 					
 					// 게시글 작성자 번호 == 로그인 회원 번호
@@ -189,14 +193,10 @@ public class BoardView {
 						
 						// 4번 게시글 수정
 						if(menuNum == 4) {
-							
+							updateBoard(boardNo); // 수정용 메서드
 							
 						} else { // 5번 게시글 삭제
-							
-							// 삭제용 메서드
-							deleteBoard(boardNo);
-							
-							
+							deleteBoard(boardNo); // 삭제용 메서드
 						}
 						
 						
@@ -229,7 +229,7 @@ public class BoardView {
 	/** 게시글 삭제
 	 * @param boardNo
 	 */
-	private void deleteBoard(int boardNo) {
+	private void deleteBoard(int boardNo){
 		// "정말 삭제 하시겠습니까?(Y/N)  -- 제대로 입력 될 때 까지 무한 반복" 
 		// -> "Y" 입력 시 
 		// -> 보안문자 생성
@@ -256,7 +256,7 @@ public class BoardView {
 			
 			// 보안문자 생성
 			String cap = captcha();
-			System.out.print("다음 보안문자를 입력해주세요 >> " + cap);
+			System.out.println("다음 보안문자를 입력해주세요 >> " + cap);
 			
 			System.out.print("보안 문자 입력 : ");
 			String input = sc.next();
@@ -264,12 +264,19 @@ public class BoardView {
 			if(input.equals(cap)) { // 입력받은 문자열과 보안 문자가 같을 때
 				// 삭제 Service 호출
 				
-				int result = service.deleteBoard(boardNo);
-				
-				if(result > 0) {
-					System.out.println(boardNo + "번 게시글이 삭제되었습니다.");
-				}else {
-					System.out.println("삭제 실패");
+				try {
+					
+					int result = service.deleteBoard(boardNo);
+					
+					if(result > 0) {
+						System.out.println(boardNo + "번 게시글이 삭제되었습니다.");
+					}else {
+						System.out.println("삭제 실패");
+					}
+					
+				} catch (Exception e) {
+					System.out.println("\n<게시글 삭제 중 예외 발생>\n");
+					e.printStackTrace();
 				}
 				
 				
@@ -301,6 +308,125 @@ public class BoardView {
 		
 		return cap;
 	}
+	
+	
+	
+	/** 게시글 수정
+	 * @param boardNo
+	 */
+	private void updateBoard(int boardNo) {
+		
+		System.out.println("\n[게시글 수정]\n");
+		
+		System.out.print("수정할 제목 : ");
+		String boardTitle = sc.nextLine();
+		
+		System.out.println("\n수정할 내용( 종료 시 @exit 입력 )\n");
+		
+		String boardContent = inputContent(); // 내용 입력 메서드 호출 후 결과 반환 받기
+		
+		
+		// 게시글 번호 / 수정한 제목 + 내용을 한번에 저장할 Board 객체 생성
+		Board board = new Board();
+		
+		board.setBoardNo(boardNo);
+		board.setBoardTitle(boardTitle);
+		board.setBoardContent(boardContent);
+		
+		try {
+			int result = service.updateBoard(board);
+			
+			if(result > 0) {
+				System.out.println(boardNo + "번 게시글이 수정 되었습니다.\n");
+			}else {
+				System.out.println("수정 실패");
+			}
+			
+			
+		}catch (Exception e) {
+			System.out.println("\n<게시글 수정 중 예외 발생>\n");
+			e.printStackTrace();
+		}
+		
+		
+	}
+	
+	
+	/* String(객체) 
+	 * - 불변성(immutable) <-> 가변성(mutable)
+	 * 
+	 * -> 한번 생성된 String 객체에 저장된 문자열은 변하지 않는다
+	 * 
+	 * ex) String str = "abc";   // Heap 영역에 String 객체가 생성되고
+	 * 							 // 생성된 객체에 "abc" 문자열에 저장
+	 *   
+	 *     str = "123";  // Heap 영역에 새로운 String 객체가 생성되고
+	 *               	 // 생성된 객체에 "123" 문자열 저장 후
+	 * 					 // 객체 주소를 str에 대입
+	 * 
+	 * 
+	 * ex) String str = "abc"; 
+	 * 
+	 *     str += "123"; // "123"이 저장된 String 객체 생성 후
+	 *     				 // "abc" 와 "123"이 합쳐진 String 객체가 추가로 별도 생성
+	 *     				 // 그 후 "abc123" 객체의 주소를 str에 저장
+	 * 
+	 * 
+	 * ** String의 문제점 **
+	 * 
+	 * - String에 저장된 값을 바꾸거나 누적하려고 할 때 마다
+	 *   String 객체가 무분별하게 생성됨 --> 메모리 낭비(메모리 누수)
+	 * 
+	 * 
+	 * ** 해결 방법 **
+	 * - StringBuffer / StringBuilder  (가변성)
+	 *   클래스를 자바에서 제공함.
+	 *   
+	 *   (StringBuffer / StringBuilder 는 사용 방법은 똑같음)
+	 *    -> 차이점은 동기/비동기 차이밖에 없음.
+	 * 
+	 * */
+	
+	
+	/** 게시글/댓글 내용 입력 메서드
+	 * @return content
+	 */
+	private String inputContent() {
+		
+		//String content = "";
+		StringBuffer content = new StringBuffer();
+		
+		String input = null;
+		
+		while(true) { // @exit 가 입력될 때 까지 무한히 문자열을 입력 받아
+			  		// 하나의 변수에 누적 == 게시글 내용
+			input = sc.nextLine();
+			
+			if(input.equals("@exit")) { // @exit가 입력된 경우
+					break;
+			} else {
+				//content += input + "\n"; // 줄 바꾸며 누적
+				
+				content.append(input);
+				content.append("\n");
+				// StringBuffer에 저장된 문자열의 제일 뒤에 input을 추가(누적)
+				// append : (제일 뒤에)덧붙이다, 추가하다, 첨부하다
+				
+				// -> 하나의 StringBuffer 객체에 문자열이 계속 누적됨 == (가변)
+				//   (추가적인 String 객체 생성이 없다)
+				
+			}
+		}
+		
+		return content.toString(); // StringBuffer에 오버라이딩된 toString()
+								   // -> 저장된 문자열을 String 형태로 반환
+	}
+	
+	
+	
+	
+	
+	
 	
 	
 	
