@@ -153,6 +153,45 @@ public class BoardService {
 		// 결과 반환
 		return result;
 	}
+
+
+	/** 댓글 수정 Service
+	 * @param reply
+	 * @return result
+	 * @throws Exception
+	 */
+	public int updateReply(Reply reply) throws Exception{
+		
+		Connection conn = getConnection();
+		
+		int result = dao.updateReply(conn, reply);
+		
+		if(result > 0)	commit(conn);
+		else			rollback(conn);
+		
+		close(conn);
+		
+		return result;
+	}
+
+
+	/** 댓글 삭제 Service
+	 * @param replyNo
+	 * @return result
+	 * @throws Exception
+	 */
+	public int deleteReply(int replyNo) throws Exception{
+		Connection conn = getConnection();
+		
+		int result = dao.deleteReply(conn, replyNo);
+		
+		if(result > 0)	commit(conn);
+		else			rollback(conn);
+		
+		close(conn);
+		
+		return result;
+	}
 	
 	
 	

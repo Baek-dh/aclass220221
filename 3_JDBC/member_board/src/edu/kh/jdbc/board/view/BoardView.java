@@ -185,6 +185,7 @@ public class BoardView {
 				case 1: insertReply(loginMember, boardNo); break;
 				
 				case 2:  case 3: 
+					
 					String tmp = menuNum == 2 ? "\n[댓글 수정]\n" : "\n[댓글 삭제]\n"; // 삼항 연산자
 					System.out.println(tmp);
 					
@@ -204,8 +205,24 @@ public class BoardView {
 					}
 					
 					
-					
-					
+					if(reply == null) { // 같은 댓글 번호가 목록에 없는 경우
+						System.out.println("\n해당 댓글이 존재하지 않습니다.\n");
+						
+					} else {  // 같은 댓글 번호가 목록에 있을 경우
+						
+						// 해당 댓글의 회원 번호(작성자)와
+						// 로그인한 회원의 번호가 같은지 확인
+						// -> 같을 경우 로그인한 사람의 댓글이다!
+						if(reply.getMemberNo() == loginMember.getMemberNo()) {
+							
+							if(menuNum == 2)	updateReply(inputNo); // 댓글 수정
+							else				deleteReply(inputNo); // 댓글 삭제
+							
+						}else {
+							System.out.println("\n현재 로그인한 회원의 댓글이 아닙니다.\n");
+						}
+						
+					}
 					
 				break; 
 				
@@ -461,7 +478,7 @@ public class BoardView {
 		// 회원 번호, 게시글 번호, 댓글 내용 -> 하나의 Reply객체에 저장
 		Reply reply = new Reply();
 		
-		reply.setMemberNo( loginMember.getMemberNo() );
+		reply.setMemberNo( loginMember .getMemberNo() );
 		reply.setBoardNo(boardNo);
 		reply.setReplyContent(replyContent);
 		
@@ -479,9 +496,102 @@ public class BoardView {
 			System.out.println("\n<댓글 작성 중 예외 발생>\n");
 			e.printStackTrace();
 		}
+	}
+	
+	
+	
+	/** 댓글 수정
+	 * @param replyNo
+	 */
+	private void updateReply(int replyNo) {
+		
+		System.out.println("수정할 내용 입력(종료 시 @exit 입력)");
+		String replyContent = inputContent();
+		
+		// Reply 객체를 생성해서 댓글 번호, 내용을 저장
+		Reply reply = new Reply();
+		
+		reply.setReplyNo(replyNo);
+		reply.setReplyContent(replyContent);
+		
+		try {
+			int result = service.updateReply(reply);
+			
+			if(result > 0) {
+				System.out.println(replyNo + "번 댓글이 수정되었습니다.\n");
+			}else {
+				System.out.println("\n댓글 수정 실패\n");
+			}
+			
+			
+		}catch (Exception e) {
+			System.out.println("\n<댓글 수정 중 예외 발생>\n");
+			e.printStackTrace();
+		}
 		
 	}
 	
+	
+	
+	/** 댓글 삭제
+	 * @param replyNo
+	 */
+	private void deleteReply(int replyNo) {
+		
+		char ch;
+		
+		while(true) {
+			System.out.print("정말로 삭제 하시겠습니까?(Y/N) : ");
+			ch = sc.next().toUpperCase().charAt(0);
+			
+			if(ch == 'Y' || ch == 'N') {
+				break;
+			}else {
+				System.out.println("Y 또는 N을 입력 해주세요.\n");
+			}
+		}
+		
+		
+		if(ch == 'Y') {
+			// 보안 문자 생성
+			String cap = captcha();
+			
+			System.out.println("다음 보안문자를 입력 해주세요 >> " + cap);
+			
+			System.out.print("보안 문자 입력 : ");
+			String input = sc.next();
+			
+			if( input.equals(cap)  ) {
+				
+				try {
+					
+					int result = service.deleteReply(replyNo);
+					
+					if(result > 0) {
+						System.out.println(replyNo + "번 댓글이 삭제되었습니다.");
+					}else {
+						System.out.println("댓글 삭제 실패");
+					}
+					
+					
+				}catch(Exception e) {
+					System.out.println("\n<댓글 삭제 중 예외 발생>\n");
+					e.printStackTrace();
+				}
+				
+				
+			} else {
+				System.out.println("\n보안 문자가 일치하지 않습니다.(삭제 취소)\n");
+			}
+			
+			
+		}else { // 'N'
+			System.out.println("\n댓글 삭제 취소\n");
+		}
+		
+		
+		
+	}
 	
 	
 	

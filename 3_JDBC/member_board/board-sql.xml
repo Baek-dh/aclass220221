@@ -62,6 +62,19 @@
 	</entry>
 
 
+	<!-- 댓글 수정 -->
+	<entry key="updateReply">
+		UPDATE REPLY SET
+		REPLY_CONTENT = ?
+		WHERE REPLY_NO = ?
+	</entry>
+	
+	<!-- 댓글 삭제 -->
+	<entry key="deleteReply">
+		DELETE FROM REPLY
+		WHERE REPLY_NO = ?
+	</entry>
+
 
 
 	
