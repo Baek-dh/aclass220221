@@ -130,6 +130,30 @@ public class BoardService {
 	}
 	
 	
+	/** 댓글 작성 Service
+	 * @param reply
+	 * @return result
+	 * @throws Exception
+	 */
+	public int insertReply(Reply reply) throws Exception{
+		
+		// 커넥션 생성
+		Connection conn = getConnection();
+		
+		// dao 수행
+		int result = dao.insertReply(conn, reply);
+		
+		// 트랜잭션 처리
+		if(result > 0)	commit(conn);
+		else			rollback(conn);
+		
+		// 커넥션 반환
+		close(conn);
+		
+		// 결과 반환
+		return result;
+	}
+	
 	
 	
 	

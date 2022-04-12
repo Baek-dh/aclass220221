@@ -290,9 +290,46 @@ public class BoardDAO {
 			result = pstmt.executeUpdate();
 			
 		}finally {
+			close(pstmt); 
+		}
+		
+		return result;
+	}
+
+	
+	
+	
+	/** 댓글 작성 DAO
+	 * @param conn
+	 * @param reply
+	 * @return result
+	 * @throws Exception
+	 */
+	public int insertReply(Connection conn, Reply reply) throws Exception{
+		// 결과 저장용 변수 선언
+		int result = 0;
+		
+		try {
+			// SQL 작성
+			String sql = prop.getProperty("insertReply");
+			
+			// PreparedStatement 생성
+			pstmt = conn.prepareStatement(sql);
+			
+			// 위치홀더에 값 세팅
+			pstmt.setString(1, reply.getReplyContent());
+			pstmt.setInt(2, reply.getMemberNo());
+			pstmt.setInt(3, reply.getBoardNo());
+			
+			// 실행
+			result = pstmt.executeUpdate();
+			
+		}finally {
+			// JDBC 객체 자원 반환
 			close(pstmt);
 		}
 		
+		// 결과 반환
 		return result;
 	}
 	

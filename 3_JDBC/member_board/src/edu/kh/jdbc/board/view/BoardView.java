@@ -165,6 +165,7 @@ public class BoardView {
 				// -> 수정/삭제
 				System.out.println("2. 댓글 수정"); 
 				System.out.println("3. 댓글 삭제");
+				// 댓글 번호 입력 -> 댓글이 있는지 확인 -> 해당 댓글이 로그인한 회원께 맞는 검사
 				
 				// 상세 조회된 게시글의 회원 번호 == 로그인한 회원 번호
 				// -> 게시글 수정/삭제
@@ -180,11 +181,34 @@ public class BoardView {
 				sc.nextLine();
 				
 				switch(menuNum) {
-				case 1:  break;
-				case 2:  break;
-				case 3:  break;
-				
 				case 0 : System.out.println("\n게시판 메뉴로 돌아갑니다...\n"); break;
+				case 1: insertReply(loginMember, boardNo); break;
+				
+				case 2:  case 3: 
+					String tmp = menuNum == 2 ? "\n[댓글 수정]\n" : "\n[댓글 삭제]\n"; // 삼항 연산자
+					System.out.println(tmp);
+					
+					System.out.print("댓글 번호 입력 : ");
+					int inputNo = sc.nextInt();
+					sc.nextLine();
+					
+					// 입력 받은 댓글 번호가 댓글 목록에 있는지 확인
+					
+					Reply reply = null; // 확인된 댓글을 참조할 변수
+					
+					for( Reply r : board.getReplyList() ) { // 반복 접근
+						if(r.getReplyNo() == inputNo) { // 입력 받은 번호와 일치하는 댓글이 있다면
+							reply = r;
+							break;
+						}
+					}
+					
+					
+					
+					
+					
+				break; 
+				
 				
 				case 4:  case 5:  
 					
@@ -424,7 +448,39 @@ public class BoardView {
 	
 	
 	
-	
+	/** 댓글 작성
+	 * @param loginMeber
+	 * @param boardNo
+	 */
+	private void insertReply(Member loginMember, int boardNo) {
+		System.out.println("[댓글 작성]");
+		
+		System.out.println("댓글 내용 입력(종료 시 @exit 입력)\n");
+		String replyContent = inputContent();
+		
+		// 회원 번호, 게시글 번호, 댓글 내용 -> 하나의 Reply객체에 저장
+		Reply reply = new Reply();
+		
+		reply.setMemberNo( loginMember.getMemberNo() );
+		reply.setBoardNo(boardNo);
+		reply.setReplyContent(replyContent);
+		
+		try {
+			// 댓글 삽입(INSERT) Service 호출 후 결과 반환 받기
+			int result = service.insertReply(reply);
+			
+			if(result > 0) {
+				System.out.println("\n댓글이 작성되었습니다.\n");
+			}else {
+				System.out.println("댓글 삽입 실패");
+			}
+			
+		}catch (Exception e) {
+			System.out.println("\n<댓글 작성 중 예외 발생>\n");
+			e.printStackTrace();
+		}
+		
+	}
 	
 	
 	

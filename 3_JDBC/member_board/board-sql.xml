@@ -55,6 +55,14 @@
 	</entry>
 
 
+	<!-- 댓글 작성 -->
+	<entry key="insertReply">
+		INSERT INTO REPLY
+		VALUES( SEQ_REPLY_NO.NEXTVAL, ?, DEFAULT, ?, ? )
+	</entry>
+
+
+
 
 	
 </properties>
