@@ -246,6 +246,7 @@ FROM BOARD B
 JOIN MEMBER USING(MEMBER_NO)
 
 --WHERE BOARD_TITLE LIKE '%' || ? || '%' -- 제목 검색
+
 --WHERE BOARD_CONTENT LIKE '%' || ? || '%' -- 내용 검색       
 
 --WHERE BOARD_TITLE LIKE '%' || ? || '%'
