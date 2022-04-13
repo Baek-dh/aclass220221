@@ -192,6 +192,44 @@ public class BoardService {
 		
 		return result;
 	}
+
+
+	/** 게시글 작성 Service
+	 * @param board
+	 * @return result
+	 * @throws Exception
+	 */
+	public int insertBoard(Board board) throws Exception {
+		Connection conn = getConnection();
+		
+		int result = dao.insertBoard(conn, board);
+		
+		if(result > 0)	commit(conn);
+		else			rollback(conn);
+		
+		close(conn);
+		
+		return result;
+	}
+
+
+	
+	/** 게시글 검색 Service
+	 * @param menuNum
+	 * @param keyword
+	 * @return boardList
+	 * @throws Exception
+	 */
+	public List<Board> searchBoard(int menuNum, String keyword) throws Exception{
+		
+		Connection conn = getConnection();
+		
+		List<Board> boardList = dao.searchBoard(conn, menuNum, keyword);
+		
+		close(conn);
+		
+		return boardList;
+	}
 	
 	
 	

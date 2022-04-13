@@ -238,6 +238,22 @@ WHERE BOARD_NO = ?
 
 ;
 
+-- 게시글 검색
+SELECT BOARD_NO, BOARD_TITLE, CREATE_DATE, READ_COUNT, MEMBER_NM,
+    (SELECT COUNT(*) FROM REPLY R
+     WHERE R.BOARD_NO = B.BOARD_NO) REPLY_COUNT
+FROM BOARD B
+JOIN MEMBER USING(MEMBER_NO)
+
+--WHERE BOARD_TITLE LIKE '%' || ? || '%' -- 제목 검색
+--WHERE BOARD_CONTENT LIKE '%' || ? || '%' -- 내용 검색       
+
+--WHERE BOARD_TITLE LIKE '%' || ? || '%'
+--OR    BOARD_CONTENT LIKE '%' || ? || '%' -- 제목 + 내용 검색
+
+WHERE MEMBER_NM LIKE '%' || ? || '%'  -- 작성자 검색
+                       
+ORDER BY BOARD_NO DESC ;
 
 
 
