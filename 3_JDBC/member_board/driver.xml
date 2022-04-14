@@ -19,7 +19,7 @@
 	<!-- <entry key="url">jdbc:oracle:thin:@115.90.212.22:9000:xe</entry>
 	<entry key="user">member</entry> -->
 	
-	<entry key="password"></entry>
+	<entry key="password">member1234</entry>
 	
 	
 	
