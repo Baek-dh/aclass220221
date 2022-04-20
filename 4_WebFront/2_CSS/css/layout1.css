@@ -103,7 +103,7 @@
 
     display : inline-block;
 
-    border : 5px solid black;
+    /* border : 5px solid black; */
 }
 
 #container-3 > .div-3:first-child{
@@ -112,4 +112,24 @@
 
 #container-3 > .div-3:last-child{
     background-color: steelblue;
+}
+
+
+
+
+/* display : none;  /  visibility : hidden; */
+.div-4{
+    border: 3px solid black;
+    height: 100px;
+}
+
+#test4{
+    background-color: deeppink;
+
+    /* 요소가 투명한 색으로 변했다! */
+    /* visibility : hidden; */
+
+    /* 요소는 존재하지만 화면에 보이지 않음(영역도 차지하지 않는다) */
+    display : none;
+
 }
