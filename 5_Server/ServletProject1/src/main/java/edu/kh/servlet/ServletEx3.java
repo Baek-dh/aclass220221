@@ -14,6 +14,8 @@ public class ServletEx3 extends HttpServlet{
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		
+		// HttpServletRequest : 클라이언트의 정보 + 요청 시 전달 값(input)
+		// HttpServletResponse : 서버가 클라이언트에게 응답할 때 필요한 도구, 방법을 가지고 있는 객체
 		
 		String inputId = req.getParameter("inputId");
 		String inputPw1 = req.getParameter("inputPw1");
@@ -23,7 +25,11 @@ public class ServletEx3 extends HttpServlet{
 		
 		String[] color = req.getParameterValues("color");
 		
+		// Dynamic Web Project(동적 웹 프로젝트)
+		// - 요청에 따라 응답 화면(HTML)을 실시간을 만드는 것(동적)
+		
 		resp.setContentType("text/html; charset=UTF-8");
+		
 		PrintWriter out = resp.getWriter();
 		
 		out.println("<!DOCTYPE html>");
