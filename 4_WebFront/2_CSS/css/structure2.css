@@ -163,8 +163,9 @@ nav a:hover{
 
 /* login 스타일 */
 form[name="login-form"]{
-    height: 140px;
+    height: 150px;
     padding: 10px;
+    margin-top: 10px;
 
     display: flex;
 
@@ -174,6 +175,12 @@ form[name="login-form"]{
     /* 중심축에 대한 정렬(세로 가운데 정렬) */
     justify-content: center;
 }
+
+form[name="login-form"] > label{
+    margin-top: 5px;
+    font-size : 14px;
+}
+
 
 
 #id-pw-area{
