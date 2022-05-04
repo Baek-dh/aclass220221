@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,6 +31,12 @@ public class LoginServlet extends HttpServlet{
 		// 전달된 파라미터 변수에 저장
 		String inputEmail = req.getParameter("inputEmail");
 		String inputPw = req.getParameter("inputPw");
+		
+		
+		// getParameter() 오버라이딩 확인
+		System.out.println("inputEmail : " + inputEmail);
+		System.out.println("inputPw : " + inputPw);
+		
 		
 		// 파라미터를 VO에 세팅(롬복 확인)
 		Member mem = new Member();
@@ -61,6 +68,60 @@ public class LoginServlet extends HttpServlet{
 				session.setMaxInactiveInterval(3600); // 3600초 == 1시간
 				// -> 초 단위로 작성
 				
+				
+				// =================================================================
+				// 아이디 저장(Cookie)
+				
+				/* Cookie : 클라이언트(브라우저)에서 관리하는 파일
+				 * 
+				 * - 특정 주소 요청 시 마다
+				 *   해당 주소와 연관된 쿠키 파일을 브라우저가 알아서 읽어옴
+				 *   -> 읽어온 쿠키 파일 내용을 서버에 같이 전달
+				 * 
+				 * 생성 및 사용 방법
+				 * 
+				 * 1) 서버가 요청에 대한 응답을 할 때
+				 *    쿠기를 생성한 후
+				 *    응답에 쿠키를 담아서 클라이언트에게 전달
+				 *    
+				 * 2) 응답에 담긴 쿠키가 클라이언트에 파일형태로 저장
+				 * 
+				 * 3) 이후 특정 주소 요청 시
+				 *    쿠키 파일을 브라우저가 찾아 자동으로 요청에 실어서 보냄.
+				 *    
+				 * 4) 서버는 요청에 실려온 쿠키 파일을 사용함.
+				 * */
+				
+				
+				// 쿠키 객체 생성
+				//Cookie c = new Cookie("클라이언트쪽에 저장될 쿠키 이름", "쿠키 내용");
+				Cookie c = new Cookie( "saveId" , inputEmail );
+				
+				
+				// 아이디 저장이 체크된 경우
+				if( req.getParameter("saveId") != null ) {
+					// 쿠키 파일을 30일 동안 유지
+					c.setMaxAge(60 * 60 * 24 * 30); // 30일(1초 단위)
+					
+				} else {
+					// 쿠키 파일을 0초 동안 유지
+					// -> 기존에 존재하던 쿠키 파일에 유지 시간을 0초 덮어씌움
+					//	  == 삭제하겠다는 소리
+					c.setMaxAge(0);
+				}
+				
+				// 해당 쿠키 파일이 적용될 주소를 지정
+				c.setPath( req.getContextPath()  );
+				// req.getContextPath() : 최상위 주소(/community)
+				// -> /community 로 시작하는 주소에서만 쿠키 적용
+				
+				
+				// 응답 객체를 이용해서 클라이언트로 전달
+				resp.addCookie(c); // 코드가 해석되는 순간 바로 전달
+				
+				
+				// =================================================================
+				
 			} else { // 실패
 				
 				session.setAttribute("message", "아이디 또는 비밀번호가 일치하지 않습니다.");
@@ -68,7 +129,6 @@ public class LoginServlet extends HttpServlet{
 			
 			
 			// 클라이언트  요청 -> 서버 요청 처리(Servlet) -> 응답 화면 만들어줘(JSP 위임)
-			
 			
 			// 1. forward(요청 위임)
 			// - Servlet으로 응답 화면 만들기가 불편하기 때문에
@@ -86,6 +146,19 @@ public class LoginServlet extends HttpServlet{
 			// - 현재 Servlet에서 응답 페이지를 만들지 않고
 			//   응답 페이지를 만들 수 있는 
 			//   다른 요청의 주소로 클라이언트를 이동 시킴(재요청)
+			
+			
+			// - 클라이언트 재요청 
+			//  -> 기존 HttpServletRequest/Response 제거
+			//  -> 새로운 HttpServletRequest/Response 생성
+			
+			//  ---> 리다이렉트 시 request 객체가 유지되지 않기 때문에
+			//       특정 데이터를 전달하거나 유지하고 싶으면
+			//       session 또는 application 범위에 세팅해야 한다!
+			
+			//dispatcher.forward(req, resp);
+			
+			
 			
 			// CGV 카페
 			// ex) 팝콘 주세요  ->   팝콘 파는 위치를 알려줌 ->  (클) 팝콘 파는 곳으로 이동
