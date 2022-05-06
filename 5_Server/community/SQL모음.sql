@@ -58,5 +58,19 @@ ALTER TABLE MEMBER
 MODIFY MEMBER_PW VARCHAR2(100);
 
 
+-- 비밀번호 변경
+UPDATE MEMBER SET
+MEMBER_PW = '암호화된 새 비밀번호'
+WHERE MEMBER_NO = '로그인한 회원 번호'
+AND MEMBER_PW = '암호화된 현재 비밀번호';
 
 
+-- 회원 탈퇴
+UPDATE MEMBER SET
+SECESSION_FL = 'Y'
+WHERE MEMBER_NO = ?
+AND MEMBER_PW = ?   ;
+
+-- 전체 회원 탈퇴 복구
+UPDATE MEMBER SET
+SECESSION_FL = 'N';
