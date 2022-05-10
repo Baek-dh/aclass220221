@@ -56,7 +56,6 @@ public class MyPageSecessionServlet extends HttpServlet{
 				// 로그아웃 방법 1
 				//path = req.getContextPath() + "/member/logout"; // 로그아웃 요청으로 리다이렉트
 				
-				
 				// 로그아웃 방법 2
 				session.invalidate(); // 세션 무효화
 				// -> 세션을 무효화 해버려서 메세지 전달이 되지 않는 문제가 발생
@@ -69,6 +68,7 @@ public class MyPageSecessionServlet extends HttpServlet{
 				session.setAttribute("message", "탈퇴 되었습니다.");
 				
 				path = req.getContextPath(); // 메인 페이지
+				
 				
 				Cookie c = new Cookie("saveId", ""); // 쿠키 생성
 				c.setMaxAge(0); // 쿠키 수명
