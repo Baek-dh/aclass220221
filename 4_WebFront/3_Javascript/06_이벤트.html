@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,7 +8,7 @@
     <title>06_이벤트</title>
 
     <style>
-        #test3{
+        #test3 {
             width: 200px;
             height: 200px;
             border: 1px solid black;
@@ -15,9 +16,18 @@
             cursor: pointer;
         }
 
+        /* 복습 문제 */
+        #div1 {
+            width: 100px;
+            height: 100px;
+            border: 1px solid black;
+
+            background-color: yellow;
+        }
     </style>
-    
+
 </head>
+
 <body>
     <h1>이벤트(Event)</h1>
 
@@ -57,8 +67,8 @@
     <button onclick="test1(this)">인라인 이벤트 모델 확인</button>
 
     <hr>
-    
-    
+
+
     <h3>고전 이벤트 모델</h3>
     <pre>
         요소가 가지고 있는 이벤트 속성(이벤트 리스너)에
@@ -75,7 +85,7 @@
     <button id="test2-3">고전 이벤트 모델 단점</button>
 
     <hr>
-    
+
 
     <h3>표준 이벤트 모델(addEventListener)</h3>
     <pre>
@@ -106,6 +116,66 @@
            -> body 마지막으로 옮기면 
               일단 화면부터 랜더링 후 JS코드를 나중에 해석한다.
      -->
+
+    <hr>
+
+    <h3>이벤트 복습 문제</h3>
+
+    색상을 영어로 입력한 후 변경 버튼을 클릭하면 #div1의 배경색이 변경되도록 하시오.
+
+    <div id="div1"></div>
+
+    <input type="text" id="input1">
+
+    <button id="changeBtn1">변경</button>
+
+
+    <hr>
+
+    <h1 style="color:red">HTML요소 기본 이벤트 제거</h1>
+
+    <h3>a태그 기본 이벤트 제거</h3>
+    <a href="https://www.naver.com" id="moveNaver">네이버로 이동</a>
+
+
+    <hr>
+    <h3>form태그 기본 이벤트 제거</h3>
+    <!-- 내부에서 submit버튼이 클릭되면 action 경로로 제출 -->
+
+    <h4>방법 1. submit 버튼을 사용 안하는 방법</h4>
+
+    <form action="01_JS개요.html" name="testForm1">
+        "제출" 이라고 입력 되었을 때만 버튼이 submit으로 동작<br>
+        입력 : <input type="text" name="in1" id="in1">
+
+        <button type="button" id="testBtn1">제출하기</button>
+    </form>
+
+
+    <hr>
+
+    <h4>방법 2. onsubmit을 이용해서 form태그 제출되는 것을 막는 방법</h4>
+
+    <!-- 
+        onsubmit : form 태그가 제출이 되었을 때
+                    -> 제출하기 버튼이 클릭 되었을 때를 의미
+        
+        onsubmit="return false"
+        -> submit을 막는 방법
+
+     -->
+    <form action="01_JS개요.html" onsubmit="return checkIn2()" >
+
+        "제출" 이라고 입력 되었을 때만 버튼이 submit으로 동작<br>
+
+        입력 : <input type="text" name="in2" id="in2">
+
+        <button type="submit">제출하기</button>
+    </form>
+
+
+
     <script src="js/06_이벤트.js"></script>
 </body>
+
 </html>
