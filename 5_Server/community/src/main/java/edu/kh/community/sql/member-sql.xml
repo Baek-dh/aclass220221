@@ -54,6 +54,14 @@
 	
 	
 	
+	<!-- 이메일 중복 검사 -->
+	<entry key="emailDupCheck">
+		SELECT COUNT(*) FROM MEMBER
+		WHERE MEMBER_EMAIL = ?
+		AND SECESSION_FL = 'N'
+	</entry>
+	
+	
 	
 	
 	

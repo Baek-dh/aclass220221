@@ -43,11 +43,11 @@
 				http://localhost:8080/community/member/myPage/secession (GET)
 				http://localhost:8080/community/member/myPage/secession (POST) 
 				-->
-                <form action="secession" method="POST" name="myPage-form">
+                <form action="secession" method="POST" name="myPage-form" onsubmit="return secessionValidate()" >
 
                     <div class="myPage-row">
                         <label>비밀번호</label>
-                        <input type="password" name="memberPw" maxlength="30">              
+                        <input type="password" name="memberPw" id="memberPw" maxlength="30">              
                     </div>
 
                     
@@ -99,7 +99,8 @@
 
 	<jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 
-
+    <!-- myPage.js 추가 -->
+    <script src="${contextPath}/resources/js/member/myPage.js"></script>
 
 </body>
 </html>

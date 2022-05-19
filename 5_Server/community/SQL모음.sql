@@ -74,3 +74,10 @@ AND MEMBER_PW = ?   ;
 -- 전체 회원 탈퇴 복구
 UPDATE MEMBER SET
 SECESSION_FL = 'N';
+
+
+-- 이메일 중복 검사
+-- 탈퇴하지 않은 회원 중 이메일이이 중복되면 1, 아니면 0
+SELECT COUNT(*) FROM MEMBER
+WHERE MEMBER_EMAIL = 'user01111@kh.or.kr'
+AND SECESSION_FL = 'N';
