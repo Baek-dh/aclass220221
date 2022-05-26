@@ -220,7 +220,7 @@ REFERENCES MEMBER;
 
 -- 게시판 이름 조회
 SELECT BOARD_NM FROM BOARD_TYPE 
-WHERE BOARD_CD = 3;
+WHERE BOARD_CD = 2;
 
 
 -- 특정 게시판의 전체 게시글 수 조회
@@ -231,8 +231,12 @@ AND BOARD_CD = 2;
 
 
 -- 특정 게시판에서 일정한 범위의 목록 조회
+
+-- ROWNUM이라는 가상의 행번호 컬럼은
+-- WHERE절에 사용되는 경우 무조건 1부터 적용되야 된다.
+
 SELECT * FROM(
-   SELECT ROWNUM RNUM, A.* FROM(
+   SELECT ROWNUM RNUM , A.* FROM(
       SELECT BOARD_NO, BOARD_TITLE, MEMBER_NICK, 
          TO_CHAR( CREATE_DT, 'YYYY-MM-DD' ) AS CREATE_DT, 
          READ_COUNT
@@ -245,3 +249,41 @@ SELECT * FROM(
 )
 WHERE RNUM BETWEEN 11 AND 20;
 
+
+
+-- 게시판 이미지 테이블 생성
+CREATE TABLE BOARD_IMG(
+   IMG_NO NUMBER PRIMARY KEY,
+   IMG_RENAME VARCHAR2(500) NOT NULL,
+   IMG_ORIGINAL VARCHAR2(500) NOT NULL,
+   IMG_LEVEL NUMBER NOT NULL,
+   BOARD_NO NUMBER REFERENCES BOARD
+);
+
+COMMENT ON COLUMN BOARD_IMG.IMG_NO IS '이미지 번호';
+COMMENT ON COLUMN BOARD_IMG.IMG_RENAME IS '이미지 저장 경로 + 변경명';
+COMMENT ON COLUMN BOARD_IMG.IMG_ORIGINAL IS '이미지 원본명';
+COMMENT ON COLUMN BOARD_IMG.IMG_LEVEL IS '이미지 위치 지정 번호';
+COMMENT ON COLUMN BOARD_IMG.BOARD_NO IS '게시글 번호';
+
+
+-- 이미지 번호 시퀀스 생성
+CREATE SEQUENCE SEQ_IMG_NO NOCACHE;
+
+-- 샘플 데이터
+INSERT INTO BOARD_IMG VALUES(
+   SEQ_IMG_NO.NEXTVAL, '/resources/images/board/sample1.jpg', 'cat1.jpg', 0, 500
+);
+INSERT INTO BOARD_IMG VALUES(
+   SEQ_IMG_NO.NEXTVAL, '/resources/images/board/sample2.jpg', 'cat2.jpg', 1, 500
+);
+INSERT INTO BOARD_IMG VALUES(
+   SEQ_IMG_NO.NEXTVAL, '/resources/images/board/sample3.jpg', 'cat3.jpg', 2, 
+   500
+);
+INSERT INTO BOARD_IMG VALUES(
+   SEQ_IMG_NO.NEXTVAL, '/resources/images/board/sample4.jpg', 'cat4.jpg', 3, 500
+);
+INSERT INTO BOARD_IMG VALUES(
+   SEQ_IMG_NO.NEXTVAL, '/resources/images/board/sample5.jpg', 'cat5.jpg', 4, 500
+);

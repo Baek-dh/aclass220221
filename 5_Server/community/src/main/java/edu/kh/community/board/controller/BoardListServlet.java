@@ -17,7 +17,6 @@ public class BoardListServlet extends HttpServlet{
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
 		try {
 			
 			// 쿼리스트링 얻어오기 == 파라미터 얻어오기
@@ -33,7 +32,6 @@ public class BoardListServlet extends HttpServlet{
 				cp = Integer.parseInt( req.getParameter("cp") );
 			}
 					
-			
 			
 			BoardService service = new BoardService();
 			
