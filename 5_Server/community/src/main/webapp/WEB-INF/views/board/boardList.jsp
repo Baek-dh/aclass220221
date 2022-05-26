@@ -59,7 +59,7 @@
                                     <tr>
                                         <td>${board.boardNo}</td>
                                         <td>   
-                                            <a href="#">${board.boardTitle}</a>
+                                            <a href="detail?no=${board.boardNo}&cp=${pagination.currentPage}&type=${param.type}">${board.boardTitle}</a>                           
                                         </td>
                                         <td>${board.memberNickname}</td>
                                         <td>${board.createDate}</td>
@@ -84,8 +84,6 @@
                 <!-- 페이지네이션 a태그에 사용될 공통 주소를 저장한 변수 선언 -->
                 <c:set var="url" value="list?type=${param.type}&cp="/>
 
-
-                ${pagination}
 
                 <ul class="pagination">
                     <!-- 첫 페이지로 이동 -->
