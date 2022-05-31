@@ -351,3 +351,10 @@ ORDER BY REPLY_NO;
 
 
 select * from reply;
+
+
+SELECT MEMBER_NO,MEMBER_EMAIL, 
+PROFILE_IMG
+FROM MEMBER
+WHERE MEMBER_EMAIL = 'user03@kh.or.kr';
+

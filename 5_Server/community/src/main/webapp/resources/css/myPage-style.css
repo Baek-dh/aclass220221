@@ -170,6 +170,8 @@ form[name="myPage-form"]{
     display: flex;
     justify-content: center;
     align-items: center;
+
+    position : relative;
 }
 
 /* 프로필 이미지 */
@@ -211,4 +213,12 @@ form[name="myPage-form"]{
     background-color: #455ba8;
     color : white;
     border: 0;
+}
+
+/* 프로필 이미지 삭제 버튼 */
+#delete-image{
+    position : absolute;
+    top: 0;
+    right: 0;
+    cursor: pointer;
 }
