@@ -37,6 +37,7 @@
                     </c:if>
                 </li>
             </c:forEach>
+            
         </ul>
     </div>
     
