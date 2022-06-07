@@ -400,5 +400,32 @@ WHERE RNUM BETWEEN 1 AND 10;
 
 -- 썸네일 조회
 SELECT IMG_RENAME FROM BOARD_IMG
-WHERE IMG_LEVEL = 0
-AND BOARD_NO = 1506;
+where BOARD_NO = 1523;
+--	 /resources/images/board/20220607110606_27936.jpg
+
+SELECT * FROM BOARD WHERE BOARD_NO = 1523;
+
+SELECT * FROM BOARD_IMG;
+
+SELECT * FROM BOARD_IMG
+where BOARD_NO = 1525;
+
+-- 게시글 이미지 수정
+--> ?번글의 ?레벨의 변경명, 원본명 을 수정
+UPDATE BOARD_IMG SET
+IMG_RENAME = ?,
+IMG_ORIGINAL = ?
+WHERE BOARD_NO = ?
+AND IMG_LEVEL = ?
+;
+
+
+-- 게시글 이미지 삭제
+DELETE FROM BOARD_IMG
+WHERE BOARD_NO = 1525
+AND IMG_LEVEL IN ( 1,3,4 );
+
+
+-- deleteList == "1,2,3"
+-- pstmt.setString(2, deleteList);
+;
