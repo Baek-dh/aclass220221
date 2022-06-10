@@ -49,7 +49,7 @@
                      <!-- required : 필수 작성 input 태그 -->
                      
                      <!-- 자바스크립로 코드 추가 예정 -->
-                     <button type="button">인증번호 받기</button>
+                     <button type="button" id="sendBtn">인증번호 받기</button>
                  </div>
  
                  <span class="signUp-message" id="emailMessage">메일을 받을 수 있는 이메일을 입력해주세요.</span>
@@ -61,14 +61,16 @@
                  </label>
                  
                  <div class="signUp-input-area">
-                     <input type="text" id="emailCheck"
+                     <!-- cNumber -->
+                     <input type="text" id="cNumber"  
                              placeholder="인증번호 입력" maxlength="6"
                              autocomplete="off">
  
-                     <button type="button">인증하기</button>
+                     <button type="button" id="cBtn">인증하기</button>
                  </div>
  
-                 <span class="signUp-message confirm">인증되었습니다.</span>
+                 <!-- 5:00 타이머 / 인증되었습니다(녹색) / 인증 시간이 만료되었습니다.(빨간색) -->
+                 <span class="signUp-message" id="cMessage" ></span>
  
  
  

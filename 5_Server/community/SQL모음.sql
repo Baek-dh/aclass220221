@@ -429,3 +429,97 @@ AND IMG_LEVEL IN ( 1,3,4 );
 -- deleteList == "1,2,3"
 -- pstmt.setString(2, deleteList);
 ;
+
+
+-- 2번 게시판에서 조건이 포함된 게시글 수 조회
+SELECT COUNT(*) FROM BOARD 
+JOIN MEMBER USING(MEMBER_NO)
+WHERE BOARD_ST = 'N'
+AND BOARD_CD = 1
+
+AND BOARD_TITLE LIKE '%50%'; -- 제목
+--AND BOARD_CONTENT LIKE '%50%'; -- 내용
+--AND (BOARD_TITLE LIKE '%50%' OR BOARD_CONTENT LIKE '%50%') ; -- 제목 + 내용
+AND MEMBER_NICK LIKE '%삼%'; -- 작성자
+
+
+-- 특정 게시판에서 조건을 만족하는 게시글 목록 조회
+
+-- key = searchBoardList1
+SELECT * FROM(
+   SELECT ROWNUM RNUM, A.* FROM(
+      SELECT BOARD_NO, BOARD_TITLE, MEMBER_NICK, 
+         TO_CHAR( CREATE_DT, 'YYYY-MM-DD' ) AS CREATE_DT, 
+         READ_COUNT ,
+         (SELECT IMG_RENAME FROM BOARD_IMG
+            WHERE IMG_LEVEL = 0
+            AND BOARD_IMG.BOARD_NO = BOARD.BOARD_NO) THUMBNAIL
+            
+      FROM BOARD
+      JOIN MEMBER USING(MEMBER_NO)
+      WHERE BOARD_CD = ?
+      AND BOARD_ST = 'N'
+
+      -- condition
+      AND BOARD_TITLE LIKE '%50%'
+
+-- key = searchBoardList2
+      ORDER BY BOARD_NO DESC
+   ) A
+)
+WHERE RNUM BETWEEN ? AND ? 
+
+ ;
+
+-- 인증 테이블 생성
+ -- 한 이메일로 발급 받은 인증번호가 계속 업데이트
+CREATE TABLE CERTIFICATION (
+   EMAIL VARCHAR2(50) PRIMARY KEY,
+   C_NUMBER CHAR(6) NOT NULL,
+   ISSUE_DT DATE DEFAULT SYSDATE
+);
+
+-- user01@kh.or.kr   123456   
+
+SELECT EMAIL, C_NUMBER,
+   TO_CHAR(ISSUE_DT, 'YYYY-MM-DD HH24:MI:SS')
+ FROM CERTIFICATION;
+
+
+
+-- 일정 시간이 지난 후를 조회하는 방법
+--> 인증번호 발급시간 + 5분 == 발급 받은지 5분이 지남 == 인증번호 만료
+-- (INTERVAL '1' HOUR | MINUTE | SECOND)
+SELECT TO_CHAR(SYSDATE + (INTERVAL '5' MINUTE), 'YYYY-MM-DD HH24:MI:SS') 
+FROM DUAL;
+
+-- 발급 시간 + 5 분 < 현재 시간 == 만료
+-- 17:03 + 5분 == 17:08      <  17:11  
+
+-- 발급 시간 + 5 분 > 현재 시간 == 인증 가능 시간
+-- 17:03 + 5분 == 17:08    >  17:06  
+
+
+-- NVL( A , B ) : A가 NULL 이면 B를 반환
+
+SELECT * FROM CERTIFICATION;
+
+-- 조건절이 TRUE이면 '1' , 아니면 NULL  조회
+SELECT '1' FROM CERTIFICATION
+WHERE 1 = 0;
+
+
+SELECT 
+   -- 이메일, 인증번호가 일치하는 행이 있는지를 찾음 -> 있으면 1, 없으면 NULL
+   --> 1이면 THEN 구문 수행  , NULL이면 ELSE 수행
+   CASE WHEN (SELECT '1' FROM CERTIFICATION
+               WHERE EMAIL = 'knbdh9782@naver.com'
+               AND C_NUMBER = '6jJZWz')  = 1
+   
+      THEN NVL( (SELECT '1' FROM CERTIFICATION
+                  WHERE EMAIL = 'knbdh9782@naver.com'
+                  AND ISSUE_DT + (INTERVAL '5' MINUTE) >= SYSDATE) , '2') 
+                  
+      ELSE '3'	
+   END			
+FROM DUAL;
