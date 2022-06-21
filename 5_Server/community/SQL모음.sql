@@ -519,7 +519,21 @@ SELECT
       THEN NVL( (SELECT '1' FROM CERTIFICATION
                   WHERE EMAIL = 'knbdh9782@naver.com'
                   AND ISSUE_DT + (INTERVAL '5' MINUTE) >= SYSDATE) , '2') 
-                  
+
       ELSE '3'	
    END			
 FROM DUAL;
+
+
+SELECT 
+   CASE WHEN (SELECT '1' FROM CERTIFICATION
+            WHERE EMAIL = ?
+            AND C_NUMBER = ?)  = 1
+   
+      THEN NVL( (SELECT '1' FROM CERTIFICATION
+            WHERE EMAIL = ?
+            AND ISSUE_DT + (INTERVAL '5' MINUTE) >= SYSDATE) , '2') 
+
+      ELSE '3'	
+   END			
+FROM DUAL

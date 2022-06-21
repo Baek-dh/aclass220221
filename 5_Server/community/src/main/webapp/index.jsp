@@ -137,7 +137,7 @@
                                 -->
 		                       <!--  <a href="/community/WEB-INF/views/member/signUp.jsp">회원가입</a>  -->
 
-		                        <a href="/community/member/signUp">회원가입</a> 
+		                        <a href="${contextPath}/member/signUp">회원가입</a> 
 
 
 
