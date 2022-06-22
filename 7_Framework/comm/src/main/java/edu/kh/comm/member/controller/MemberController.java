@@ -4,18 +4,22 @@ import javax.servlet.ServletRequest;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
 
 import edu.kh.comm.member.model.service.MemberService;
 import edu.kh.comm.member.model.service.MemberServiceImpl;
@@ -33,8 +37,14 @@ import edu.kh.comm.member.model.vo.Member;
 //@Component // 해당 클래스를 bean으로 등록하라는 프로그램에게 알려주는 주석(Annotation)
 
 @Controller // 생성된 bean이 Contorller임을 명시 + bean 등록
+
 @RequestMapping("/member") // localhost:8080/comm/member 이하의 요청을 처리하는 컨트롤러
+
+@SessionAttributes({"loginMember"}) // Model에 추가된 값의 key와 어노테이션에 작성된 값이 같으면
+									// 해당 값을 session scope 이동시키는 역할
 public class MemberController {
+	
+	
 	
 	private Logger logger = LoggerFactory.getLogger(MemberController.class);
 	
@@ -158,7 +168,8 @@ public class MemberController {
 	
 	//@RequestMapping(value = "/login", method = RequestMethod.POST)
 	@PostMapping("/login")
-	public String login( /*@ModelAttribute*/ Member inputMember ) {
+	public String login( /*@ModelAttribute*/ Member inputMember 
+						, Model model) {
 												
 		// @ModelAttribute 생략 가능 
 		// -> 커맨드 객체 (@ModelAttribute가 생략된 상태에서 파라미터가 필드에 세팅된 객체)
@@ -166,8 +177,48 @@ public class MemberController {
 		logger.info("로그인 기능 수행됨");
 		
 		
+		// 아이디, 비밀번호가 일치하는 회원 정보를 조회하는 Service 호출 후 결과 반환 받기
+		Member loginMember = service.login(inputMember);
+		
+		
+		/* Model : 데이터를 맵 형식(K:V) 형태로 담아 전달하는 용도의 객체
+		 * -> request, session을 대체하는 객체
+		 * 
+		 * - 기본 scope : request
+		 * - session scope로 변환하고 싶은 경우
+		 *   클래스 레벨로 @SessionAttributes를 작성되면 된다.
+		 * */
+		
+		// @SessionAttributes 미작성 -> request scope
+		model.addAttribute("loginMember", loginMember); // == req.setAttribute("loginMember", loginMember);
+		
+		//session.setAttribute("loginMember", loginMember);
+		
 		return "redirect:/";
 	}
+	
+	
+	
+	// 로그아웃
+	@GetMapping("/logout")
+	public String logout( /*HttpSession session,*/
+						SessionStatus status) {
+		
+		// 로그아웃 == 세션을 없애는 것
+		
+		// * @SessionAttributes을 이용해서 session scope에 배치된 데이터는
+		//   SessionStatus라는 별도 객체를 이용해야만 없앨 수 있다.
+		logger.info("로그아웃 수행됨");
+		
+		// session.invalidate(); // 기존 세션 무효화 방식으로는 안된다!
+		
+		status.setComplete(); // 세센이 할 일이 완료됨 -> 없앰
+		
+		return "redirect:/"; // 메인페이지 리다이렉트
+		
+	}
+	
+	
 	
 	
 	
@@ -178,6 +229,8 @@ public class MemberController {
 		
 		return "member/signUp";
 	}
+	
+	
 	
 	
 	
