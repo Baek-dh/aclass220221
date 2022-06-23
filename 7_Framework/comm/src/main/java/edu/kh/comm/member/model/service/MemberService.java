@@ -21,6 +21,25 @@ public interface MemberService {
 	 */
 	public abstract Member login(Member inputMember);
 
+	/** 이메일 중복 검사 서비스
+	 * @param memberEmail
+	 * @return result
+	 */
+	public abstract int emailDupCheck(String memberEmail);
+ 
+	/** 닉네임 중복 검사 서비스
+	 * @param memberNickname
+	 * @return result
+	 */
+	public abstract int nicknameDupCheck(String memberNickname);
+
+	
+	/** 회원 가입
+	 * @param inputMember
+	 * @return result
+	 */
+	public abstract int signUp(Member inputMember);
+
 	
 }
 
