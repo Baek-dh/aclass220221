@@ -80,4 +80,5 @@ WHERE MEMBER_NO = 1;
 -- 이메일 중복 검사 (1 중복, 0 사용 가능)
 SELECT COUNT(*) FROM MEMBER_S
 WHERE MEMBER_EMAIL = 'test01@naver.com'
-AND SECESSION_FL = 'N';
+AND SECESSION_FL = 'N'
+;
