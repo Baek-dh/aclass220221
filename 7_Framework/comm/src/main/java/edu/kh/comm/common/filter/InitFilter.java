@@ -1,6 +1,7 @@
 package edu.kh.comm.common.filter;
 
 import java.io.IOException;
+
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -17,6 +18,7 @@ import org.slf4j.LoggerFactory;
 
 @WebFilter(filterName = "initFilter", urlPatterns = "/*")
 public class InitFilter extends HttpFilter implements Filter {
+		
 	
 	// print 구문 사용하다 걸리면 알아서 하세요
 	// -> Logger / Debug Mode 사용
@@ -51,6 +53,7 @@ public class InitFilter extends HttpFilter implements Filter {
 									// 다운캐스팅
 		// 세팅
 		application.setAttribute("contextPath", contextPath);
+		
 		
 		chain.doFilter(request, response);
 	}

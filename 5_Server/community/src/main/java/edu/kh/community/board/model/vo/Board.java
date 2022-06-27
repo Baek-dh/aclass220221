@@ -17,6 +17,8 @@ public class Board {
 	private String createDate;
 	private int readCount;
 	private String thumbnail;
+	
+	
 	public int getBoardNo() {
 		return boardNo;
 	}

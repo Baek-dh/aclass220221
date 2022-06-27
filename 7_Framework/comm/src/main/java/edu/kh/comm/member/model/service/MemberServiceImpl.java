@@ -1,5 +1,7 @@
 package edu.kh.comm.member.model.service;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -122,6 +124,21 @@ public class MemberServiceImpl implements MemberService{
 		
 		return result;
 	}
+
+
+	// 회원 1명 정보 조회 서비스 구현
+	@Override
+	public Member selectOne(String memberEmail) {
+		return dao.selectOne(memberEmail);
+	}
+
+
+	// 회원 목록 조회 서비스 구현
+	@Override
+	public List<Member> selectAll() {
+		return dao.selectAll();
+	}
+	
 	
 	
 	

@@ -1,4 +1,4 @@
-package edu.kh.community.board.model.vo;
+package edu.kh.comm.board.model.vo;
 
 
 public class Pagination {
