@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import edu.kh.comm.board.model.vo.Board;
+import edu.kh.comm.board.model.vo.BoardDetail;
 import edu.kh.comm.board.model.vo.BoardType;
 import edu.kh.comm.board.model.vo.Pagination;
 
@@ -56,7 +57,29 @@ public class BoardDAO {
 		return sqlSession.selectList("boardMapper.selectBoardList", boardCode, rowBounds);
 	}
 
+
+	
+	/** 게시글 상세 조회 DAO
+	 * @param boardNo
+	 * @return dtail
+	 */
+	public BoardDetail selectBoardDetail(int boardNo) {
+		return sqlSession.selectOne("boardMapper.selectBoardDetail", boardNo);
+	}
+
+
+	/** 조회수 증가 DAO
+	 * @param boardNo
+	 * @return result
+	 */
+	public int updateReadCount(int boardNo) {
+		return sqlSession.update("boardMapper.updateReadCount", boardNo);
+	}
+
 }
+
+
+
 
 
 
