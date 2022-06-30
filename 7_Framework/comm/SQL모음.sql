@@ -73,7 +73,7 @@ AND SECESSION_FL = 'N';
 
 -- MEMBER_S 테이블에서 회원번호가 1번인 회원의 비밀번호를 암호화된 비밀번호로 수정
 UPDATE MEMBER_S SET
-MEMBER_PW = '$2a$10$k3fw.1HaU12LIwydGiufjeFD3mbD8BzhU4B7X4fvwqHEAF19RwJ/C'
+MEMBER_PW = '$2a$10$kNWOSjXgWkMHO1pcqFFDi.UD0zTYfJwsFr1fLM35LmMpGg3Do/VVe'
 WHERE MEMBER_NO = 1;
 
 
@@ -140,3 +140,65 @@ INSERT INTO BOARD_IMG VALUES(SEQ_IMG_NO.NEXTVAL, '/resources/images/board/sample
 INSERT INTO BOARD_IMG VALUES(SEQ_IMG_NO.NEXTVAL, '/resources/images/board/sample5.jpg', 'sample1.jpg', 4, SEQ_BOARD_NO.CURRVAL);
 
 commit;
+
+SELECT * FROM BOARD ORDER BY 1 DESC;
+SELECT * FROM BOARD_IMG ORDER BY 1 DESC;
+
+
+-- 게시글 목록 조회
+SELECT BOARD_NO, BOARD_TITLE, MEMBER_NICK, READ_COUNT,
+CASE WHEN SYSDATE - CREATE_DT < 1
+        THEN TO_CHAR(CREATE_DT, 'HH:MI')
+        ELSE TO_CHAR(CREATE_DT, 'YYYY-MM-DD')
+    END CREATE_DT, 
+    
+    (SELECT IMG_RENAME FROM BOARD_IMG 
+    WHERE BOARD.BOARD_NO = BOARD_IMG.BOARD_NO
+    AND IMG_LEVEL = 0) THUMBNAIL
+    
+FROM BOARD
+JOIN BOARD_TYPE USING(BOARD_CD)
+JOIN MEMBER_S USING(MEMBER_NO)
+WHERE BOARD_ST = 'N'
+AND BOARD_CD = 1
+ORDER BY BOARD_NO DESC;
+
+
+SELECT * FROM BOARD ORDER BY 1 DESC;
+
+
+-- 서브쿼리를 이용한 INSERT
+--> SELECT 조회 결과를 BOARD_IMG 테이블에 삽입
+
+-- 조건 1 : 서브쿼리로 조회된 RESULT SET의 컬럼과 BOARD_IMG 컬럼명이 같아야 한다.
+-- 조건 2 : UNION ALL로 합쳐진 서브쿼리에서는 시퀀스를 사용할 수 없다.
+INSERT INTO BOARD_IMG 
+
+SELECT SEQ_IMG_NO.NEXTVAL IMG_NO,  A.* FROM(
+
+    SELECT --SEQ_IMG_NO.NEXTVAL IMG_NO, 
+        '변경된 파일명1' IMG_RENAME, '원본 파일명1'   IMG_ORIGINAL,
+        '0'               IMG_LEVEL, '1553'            BOARD_NO
+    FROM DUAL
+
+    UNION ALL
+
+    SELECT --SEQ_IMG_NO.NEXTVAL IMG_NO, 
+        '변경된 파일명2' IMG_RENAME, '원본 파일명2'   IMG_ORIGINAL,
+        '1'               IMG_LEVEL,  '1553'            BOARD_NO
+    FROM DUAL
+
+    UNION ALL
+
+    SELECT --SEQ_IMG_NO.NEXTVAL IMG_NO, 
+        '변경된 파일명3' IMG_RENAME, '원본 파일명3'   IMG_ORIGINAL,
+        '2'               IMG_LEVEL,  '1553'            BOARD_NO
+    FROM DUAL
+) A   ;
+
+
+DELETE FROM BOARD_IMG
+WHERE BOARD_NO = 1553;
+
+
+
