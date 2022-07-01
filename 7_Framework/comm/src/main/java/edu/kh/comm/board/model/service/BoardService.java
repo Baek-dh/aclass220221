@@ -9,6 +9,10 @@ import org.springframework.web.multipart.MultipartFile;
 import edu.kh.comm.board.model.vo.BoardDetail;
 import edu.kh.comm.board.model.vo.BoardType;
 
+/**
+ * @author user1
+ *
+ */
 public interface BoardService {
 
 	/** 게시판 코드,이름 조회
@@ -48,6 +52,33 @@ public interface BoardService {
 	 * @throws IOException
 	 */
 	int insertBoard(BoardDetail detail, List<MultipartFile> imageList, String webPath, String folderPath)  throws IOException;
+
+
+	/** 게시글 수정 서비스
+	 * @param detail
+	 * @param imageList
+	 * @param webPath
+	 * @param folderPath
+	 * @param deleteList
+	 * @return result
+	 * @throws IOException
+	 */
+	int updateBoard(BoardDetail detail, List<MultipartFile> imageList, String webPath, String folderPath,
+			String deleteList)  throws IOException;
+
+
+	/** 게시글 삭제 서비스
+	 * @param boardNo
+	 * @return result
+	 */
+	int deleteBoard(int boardNo);
+
+
+	/** 검색 게시글 목록 조회 서비스
+	 * @param paramMap
+	 * @return map
+	 */
+	Map<String, Object> searchBoardList(Map<String, Object> paramMap);
 
 	
 	

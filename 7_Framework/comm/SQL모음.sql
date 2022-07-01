@@ -173,7 +173,6 @@ SELECT * FROM BOARD ORDER BY 1 DESC;
 -- 조건 1 : 서브쿼리로 조회된 RESULT SET의 컬럼과 BOARD_IMG 컬럼명이 같아야 한다.
 -- 조건 2 : UNION ALL로 합쳐진 서브쿼리에서는 시퀀스를 사용할 수 없다.
 INSERT INTO BOARD_IMG 
-
 SELECT SEQ_IMG_NO.NEXTVAL IMG_NO,  A.* FROM(
 
     SELECT --SEQ_IMG_NO.NEXTVAL IMG_NO, 
@@ -201,4 +200,22 @@ DELETE FROM BOARD_IMG
 WHERE BOARD_NO = 1553;
 
 
+SELECT * FROM BOARD_IMG ORDER BY 1 DESC;
 
+
+-- 검색 조건 추가
+SELECT COUNT(*) 
+FROM BOARD
+JOIN MEMBER_S USING(MEMBER_NO)
+WHERE BOARD_CD = 1
+AND BOARD_ST = 'N'
+
+AND
+
+--    BOARD_TITLE LIKE '%1%'; -- 제목 검색
+--    BOARD_CONTENT LIKE '%1%'; -- 내용 검색
+    -- (BOARD_TITLE LIKE '%1%' 
+    -- OR
+    -- BOARD_CONTENT LIKE '%1%'); -- 제목 + 내용 검색
+
+      MEMBER_NICK LIKE '%수%'; -- 작성자 검색
