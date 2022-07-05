@@ -288,6 +288,13 @@ public class BoardServiceImpl implements BoardService{
 	public int deleteBoard(int boardNo) {
 		return dao.deleteBoard(boardNo);
 	}
+
+	
+	// BOARD_IMG 이미지 목록 조회 구현
+	@Override
+	public List<String> selectDBList() {
+		return dao.selectDBList();
+	}
 	
 	
 	
