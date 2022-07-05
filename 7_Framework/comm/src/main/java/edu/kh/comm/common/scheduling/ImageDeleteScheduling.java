@@ -38,8 +38,9 @@ public class ImageDeleteScheduling {
 	
 	// 스케쥴링에 사용되는 메서드는 무조건 public void 메서드명()
 	
-	//@Scheduled(cron="0 0 * * * *") // 정시 마다
-	@Scheduled(cron="0 * * * * *") // 매 분마다(테스트용)
+	@Scheduled(cron="0 0 * * * *") // 정시 마다
+//	@Scheduled(cron="0 * * * * *") // 매 분마다(테스트용)
+//	@Scheduled(fixedDelay = 10000) // 10초마다
 	public void serverImageDelete() {
 		
 		// 1) BOARD_IMG에 존재하는 모든 이미지 목록 조회
@@ -61,12 +62,29 @@ public class ImageDeleteScheduling {
 		//   (DB에는 없는데 서버 폴더에 있으면 삭제)
 		if( !serverList.isEmpty() ) { // 서버에 이미지 파일이 있을때 비교/삭제 진행
 			
+			// server : \resources\images\board\sampe1.jpg
+			// DB : /resources/images/board/sampe1.jpg
+			
+			for( File serverImage : serverList ) {
+				
+				String name =  "/resources/images/board/" + serverImage.getName(); // 파일명만 얻어오기
+				
+				//  /resources/images/board/sample1.jpg       /resources/images/board/sample2.jpg   
+				//			서버 파일명					   			 DB
+				
+				
+				// List.indexOf(value) : List에 value와 같은 값이 있으면 인덱스 반환 / 없으면 -1 반환
+				if(dbList.indexOf(name) == -1 ) {
+					
+					// dbList에는 없는데 serverList에만 파일이 존재하는 경우
+					logger.info(serverImage.getName() + " 삭제");
+					serverImage.delete(); // 파일 삭제
+				}
+			}
+			
+			logger.info("----------서버 이미지 삭제 완료----------");
 		}
-		
-		
-		
 	}
-	
 	
 	
 }
