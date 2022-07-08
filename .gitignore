@@ -7,6 +7,7 @@ target
 pom.properties
 .classpath
 MANIFEST.MF
+Servers
 
 # Created by https://www.toptal.com/developers/gitignore/api/java,eclipse,windows
 # Edit at https://www.toptal.com/developers/gitignore?templates=java,eclipse,windows
@@ -129,9 +130,3 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/java,eclipse,windows
-
-*.jpg
-*.gif
-*.png
-javaTest/프로그래밍언어활용1/src/edu/kh/test/Ex.java
-javaTest/프로그래밍언어활용1/src/edu/kh/test/Ex2.java
